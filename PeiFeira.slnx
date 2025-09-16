@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PeiFeira.Api/PeiFeira.Api.csproj" Id="901bdbd6-656a-4b5f-9b53-baeaf5c0b1fb" />
+    <Project Path="src/PeiFeira.Application/PeiFeira.Application.csproj" Id="2b9e0bad-5ccf-4806-90a8-5de62f1d9fce" />
+    <Project Path="src/PeiFeira.Communication/PeiFeira.Communication.csproj" Id="085bc0ff-7f2d-4951-9c0e-6f21c831c5b7" />
+    <Project Path="src/PeiFeira.Domain/PeiFeira.Domain.csproj" Id="20dc9c9a-1c30-4454-959e-79fa99370e94" />
+    <Project Path="src/PeiFeira.Exception/PeiFeira.Exception.csproj" Id="dd73722b-8661-45a3-b18c-bd5618b827dc" />
+    <Project Path="src/PeiFeira.Infrastructure/PeiFeira.Infrastructure.csproj" Id="9b2ef2a7-7ab6-45d6-8cf8-8347098be96c" />
+    <Project Path="src/PeiFeira.IoC/PeiFeira.IoC.csproj" Id="c3380103-6d5f-402e-a916-1938a51b47ce" />
+  </Folder>
+  <Folder Name="/tests/" />
+</Solution>
