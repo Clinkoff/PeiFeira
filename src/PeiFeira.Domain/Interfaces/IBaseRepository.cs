@@ -1,14 +1,4 @@
 ﻿using PeiFeira.Domain.Bases;
-using PeiFeira.Domain.Entities.Equipes;
-using PeiFeira.Domain.Entities.Usuarios;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using System.Runtime.Intrinsics.X86;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PeiFeira.Domain.Interfaces;
 
