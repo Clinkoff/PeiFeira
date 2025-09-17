@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PeiFeira.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using PeiFeira.Infrastructure.Data;
 namespace PeiFeira.Infrastructure.Migrations
 {
     [DbContext(typeof(PeiFeiraDbContext))]
-    partial class PeiFeiraDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250917193757_Convites")]
+    partial class Convites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

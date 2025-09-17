@@ -19,7 +19,7 @@ public class PeiFeiraDbContext : DbContext
     public DbSet<MembroEquipe> MembrosEquipe { get; set; }
     public DbSet<Projeto> Projetos { get; set; }
     public DbSet<Avaliacao> Avaliacoes { get; set; }
-
+    public DbSet<ConviteEquipe> ConvitesEquipe { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -63,6 +63,36 @@ public class PeiFeiraDbContext : DbContext
             entity.HasIndex(e => e.CodigoConvite).IsUnique();
             entity.HasIndex(e => e.LiderId);
             entity.HasIndex(e => e.IsActive);
+        });
+
+        modelBuilder.Entity<ConviteEquipe>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Status).HasConversion<int>();
+            entity.Property(e => e.Mensagem).HasMaxLength(500);
+            entity.Property(e => e.MotivoResposta).HasMaxLength(500);
+
+            entity.HasOne(e => e.Equipe)
+                  .WithMany()
+                  .HasForeignKey(e => e.EquipeId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.ConvidadoPor)
+                  .WithMany()
+                  .HasForeignKey(e => e.ConvidadoPorId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Convidado)
+                  .WithMany()
+                  .HasForeignKey(e => e.ConvidadoId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(e => new { e.EquipeId, e.ConvidadoId })
+                  .IsUnique()
+                  .HasDatabaseName("IX_ConviteEquipe_Equipe_Convidado_Unique");
+
+            entity.HasIndex(e => e.ConvidadoId);
+            entity.HasIndex(e => e.Status);
         });
 
         // Configuração 

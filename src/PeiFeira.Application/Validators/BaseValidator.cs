@@ -9,12 +9,12 @@ namespace PeiFeira.Application.Validators;
 
 public abstract class BaseValidator<T> : AbstractValidator<T>
 {
-    protected static bool BeValidGuid(Guid guid)
+    public static bool BeValidGuid(Guid guid)
     {
         return guid != Guid.Empty;
     }
 
-    protected static bool BeValidMatricula(string matricula)
+    public static bool BeValidMatricula(string matricula)
     {
         if (string.IsNullOrWhiteSpace(matricula))
             return false;
@@ -22,7 +22,7 @@ public abstract class BaseValidator<T> : AbstractValidator<T>
         return matricula.Length == 10 && matricula.All(char.IsDigit);
     }
 
-    protected static bool BeValidEmail(string email)
+    public static bool BeValidEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
             return false;
