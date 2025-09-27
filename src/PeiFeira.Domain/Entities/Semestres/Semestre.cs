@@ -1,13 +1,9 @@
 ﻿using PeiFeira.Domain.Bases;
 using PeiFeira.Domain.Entities.Projetos;
-using System;
-using System.Collections.Generic;
+using PeiFeira.Domain.Entities.Turmas;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PeiFeira.Domain.Semestres;
+namespace PeiFeira.Domain.Entities.Semestres;
 
 [Table("Semestre")]
 public class Semestre : Auditable, IBaseEntity

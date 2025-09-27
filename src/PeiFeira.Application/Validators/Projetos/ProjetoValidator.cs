@@ -24,13 +24,5 @@ public class ProjetoValidator : BaseValidator<Projeto>
             .WithMessage("Desafio proposto é obrigatório")
             .Length(10, 1000)
             .WithMessage("Desafio deve ter entre 10 e 1000 caracteres");
-
-        RuleFor(p => p.EquipeId)
-            .NotEmpty()
-            .WithMessage("Equipe é obrigatória")
-            .Must(BeValidGuid)
-            .WithMessage("ID da equipe deve ser válido");
-
-   
     }
 }

@@ -11,11 +11,13 @@ public class MembroEquipe : Auditable, IBaseEntity
     public bool IsActive { get; set; } = true;
 
     public Guid EquipeId { get; set; }
-    public Guid UsuarioId { get; set; }
-    public TeamMemberRole Funcao { get; set; }
+    public Guid PerfilAlunoId { get; set; }
+
+    public TeamMemberRole Cargo { get; set; }
+    public string? Funcao { get; set; }
     public DateTime IngressouEm { get; set; } = DateTime.UtcNow;
     public DateTime? SaiuEm { get; set; }
 
     public virtual Equipe Equipe { get; set; } = null!;
-    public virtual Usuario Usuario { get; set; } = null!;
+    public virtual PerfilAluno PerfilAluno { get; set; } = null!;
 }

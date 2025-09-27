@@ -1,5 +1,6 @@
 ﻿using PeiFeira.Domain.Bases;
 using PeiFeira.Domain.Entities.Equipes;
+using PeiFeira.Domain.Entities.Turmas;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PeiFeira.Domain.Entities.Usuarios;
@@ -14,4 +15,6 @@ public class PerfilAluno : Auditable, IBaseEntity
     public int? Periodo { get; set; }
     public virtual Usuario Usuario { get; set; } = null!;
     public virtual ICollection<MembroEquipe> MembroEquipes { get; set; } = new List<MembroEquipe>();
+    public virtual ICollection<AlunoTurma> Turmas { get; set; } = new List<AlunoTurma>(); // Histórico de turmas
+
 }

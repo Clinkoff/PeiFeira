@@ -3,6 +3,8 @@ using PeiFeira.Domain.Bases;
 using PeiFeira.Domain.Entities.Avaliacoes;
 using PeiFeira.Domain.Entities.Equipes;
 using PeiFeira.Domain.Entities.Projetos;
+using PeiFeira.Domain.Entities.Semestres;
+using PeiFeira.Domain.Entities.Turmas;
 using PeiFeira.Domain.Entities.Usuarios;
 using System.Linq.Expressions;
 
@@ -14,23 +16,31 @@ public class PeiFeiraDbContext : DbContext
     {
     }
 
+    // DbSets
     public DbSet<Usuario> Usuarios { get; set; }
+    public DbSet<PerfilAluno> PerfisAluno { get; set; }
+    public DbSet<PerfilProfessor> PerfisProfessor { get; set; }
     public DbSet<Equipe> Equipes { get; set; }
     public DbSet<MembroEquipe> MembrosEquipe { get; set; }
+    public DbSet<ConviteEquipe> ConvitesEquipe { get; set; }
     public DbSet<Projeto> Projetos { get; set; }
     public DbSet<Avaliacao> Avaliacoes { get; set; }
-    public DbSet<ConviteEquipe> ConvitesEquipe { get; set; }
+    public DbSet<Semestre> Semestres { get; set; }
+    public DbSet<Turma> Turmas { get; set; }
+    public DbSet<AlunoTurma> AlunosTurma { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+        // ===== USUARIO =====
         modelBuilder.Entity<Usuario>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Matricula).HasMaxLength(20).IsRequired();
             entity.Property(e => e.Nome).HasMaxLength(200).IsRequired();
             entity.Property(e => e.Email).HasMaxLength(255).IsRequired();
-            entity.Property(e => e.SenhaHash).HasMaxLength(500).IsRequired(); 
+            entity.Property(e => e.SenhaHash).HasMaxLength(500).IsRequired();
             entity.Property(e => e.Role).HasConversion<int>();
 
             entity.Property(e => e.CriadoEm).IsRequired();
@@ -39,7 +49,6 @@ public class PeiFeiraDbContext : DbContext
 
             entity.HasIndex(e => e.Matricula).IsUnique();
             entity.HasIndex(e => e.Email).IsUnique();
-
             entity.HasIndex(e => e.IsActive);
 
             entity.HasOne(e => e.PerfilAluno)
@@ -53,36 +62,161 @@ public class PeiFeiraDbContext : DbContext
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
+        // ===== PERFIL ALUNO =====
         modelBuilder.Entity<PerfilAluno>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Curso).HasMaxLength(200);
             entity.Property(e => e.Periodo);
+
             entity.HasIndex(e => e.UsuarioId).IsUnique();
+            entity.HasIndex(e => e.IsActive);
+
             entity.Property(e => e.CriadoEm).IsRequired();
             entity.Property(e => e.AlteradoEm);
             entity.Property(e => e.DeletadoEm);
-            entity.HasIndex(e => e.IsActive);
         });
 
+        // ===== PERFIL PROFESSOR =====
         modelBuilder.Entity<PerfilProfessor>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.HasIndex(e => e.UsuarioId).IsUnique();
+            entity.HasIndex(e => e.IsActive);
+
             entity.Property(e => e.Departamento).HasMaxLength(200);
             entity.Property(e => e.AreaEspecializacao).HasMaxLength(300);
             entity.Property(e => e.Titulacao).HasMaxLength(100);
+
             entity.Property(e => e.CriadoEm).IsRequired();
             entity.Property(e => e.AlteradoEm);
             entity.Property(e => e.DeletadoEm);
-            entity.HasIndex(e => e.IsActive);
         });
 
-        // Configuração 
+        // ===== SEMESTRE =====
+        modelBuilder.Entity<Semestre>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Nome).HasMaxLength(10).IsRequired();
+            entity.Property(e => e.Ano).IsRequired();
+            entity.Property(e => e.Periodo).IsRequired();
+            entity.Property(e => e.DataInicio).IsRequired();
+            entity.Property(e => e.DataFim).IsRequired();
+
+            entity.HasIndex(e => new { e.Ano, e.Periodo }).IsUnique();
+            entity.HasIndex(e => e.IsActive);
+
+            entity.Property(e => e.CriadoEm).IsRequired();
+            entity.Property(e => e.AlteradoEm);
+            entity.Property(e => e.DeletadoEm);
+        });
+
+        // ===== TURMA =====
+        modelBuilder.Entity<Turma>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Nome).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.Codigo).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.Curso).HasMaxLength(200);
+            entity.Property(e => e.Turno).HasMaxLength(20);
+            entity.Property(e => e.Tipo).HasConversion<int>();
+
+            entity.HasIndex(e => e.Codigo).IsUnique();
+            entity.HasIndex(e => e.IsActive);
+
+            entity.Property(e => e.CriadoEm).IsRequired();
+            entity.Property(e => e.AlteradoEm);
+            entity.Property(e => e.DeletadoEm);
+
+            entity.HasOne(t => t.Semestre)
+                  .WithMany(s => s.Turmas)
+                  .HasForeignKey(t => t.SemestreId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ===== ALUNO_TURMA =====
+        modelBuilder.Entity<AlunoTurma>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.DataMatricula).IsRequired();
+            entity.Property(e => e.IsAtual).IsRequired();
+
+            entity.HasIndex(e => e.IsActive);
+            entity.HasIndex(e => new { e.PerfilAlunoId, e.TurmaId, e.IsAtual });
+
+            entity.Property(e => e.CriadoEm).IsRequired();
+            entity.Property(e => e.AlteradoEm);
+            entity.Property(e => e.DeletadoEm);
+
+            entity.HasOne(at => at.PerfilAluno)
+                  .WithMany(pa => pa.Turmas)
+                  .HasForeignKey(at => at.PerfilAlunoId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(at => at.Turma)
+                  .WithMany(t => t.AlunosTurma)
+                  .HasForeignKey(at => at.TurmaId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ===== PROJETO =====
+        modelBuilder.Entity<Projeto>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Projeto");
+
+            entity.Property(e => e.Titulo).HasMaxLength(300).IsRequired();
+            entity.Property(e => e.Tema).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.DesafioProposto).HasMaxLength(2000).IsRequired();
+            entity.Property(e => e.Status).HasConversion<int>().IsRequired();
+
+            entity.Property(e => e.NomeEmpresa).HasMaxLength(200);
+            entity.Property(e => e.EnderecoCompleto).HasMaxLength(500);
+            entity.Property(e => e.Cidade).HasMaxLength(100);
+            entity.Property(e => e.RedeSocial).HasMaxLength(200);
+            entity.Property(e => e.Contato).HasMaxLength(100);
+
+            entity.Property(e => e.NomeResponsavel).HasMaxLength(200);
+            entity.Property(e => e.CargoResponsavel).HasMaxLength(100);
+            entity.Property(e => e.TelefoneResponsavel).HasMaxLength(20);
+            entity.Property(e => e.EmailResponsavel).HasMaxLength(200);
+            entity.Property(e => e.RedesSociaisResponsavel).HasMaxLength(500);
+
+            entity.HasIndex(e => e.IsActive);
+            entity.HasIndex(e => e.Status);
+            entity.HasIndex(e => e.SemestreId);
+            entity.HasIndex(e => e.TurmaId);
+
+            entity.Property(e => e.CriadoEm).IsRequired();
+            entity.Property(e => e.AlteradoEm);
+            entity.Property(e => e.DeletadoEm);
+
+            entity.HasOne(p => p.Semestre)
+                  .WithMany(s => s.Projetos)
+                  .HasForeignKey(p => p.SemestreId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(p => p.Turma)
+                  .WithMany(t => t.Projetos)
+                  .HasForeignKey(p => p.TurmaId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(p => p.ProfessorOrientador)
+                  .WithMany(pp => pp.ProjetosOrientados)
+                  .HasForeignKey(p => p.PerfilProfessorOrientadorId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasMany(p => p.Equipes)
+                  .WithOne(e => e.Projeto)
+                  .HasForeignKey(e => e.ProjetoId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ===== EQUIPE =====
         modelBuilder.Entity<Equipe>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Nome).HasMaxLength(200).IsRequired(); 
+            entity.Property(e => e.Nome).HasMaxLength(200).IsRequired();
             entity.Property(e => e.UrlQrCode).HasMaxLength(500);
             entity.Property(e => e.CodigoConvite).HasMaxLength(50);
 
@@ -92,20 +226,25 @@ public class PeiFeiraDbContext : DbContext
 
             entity.HasOne(e => e.Lider)
                   .WithMany()
-                  .HasForeignKey(e => e.LiderId)
+                  .HasForeignKey(e => e.LiderPerfilAlunoId)
                   .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasIndex(e => e.CodigoConvite).IsUnique();
-            entity.HasIndex(e => e.LiderId);
+            entity.HasIndex(e => e.LiderPerfilAlunoId);
             entity.HasIndex(e => e.IsActive);
         });
 
+        // ===== CONVITE_EQUIPE =====
         modelBuilder.Entity<ConviteEquipe>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Status).HasConversion<int>();
             entity.Property(e => e.Mensagem).HasMaxLength(500);
             entity.Property(e => e.MotivoResposta).HasMaxLength(500);
+
+            entity.Property(e => e.CriadoEm).IsRequired();
+            entity.Property(e => e.AlteradoEm);
+            entity.Property(e => e.DeletadoEm);
 
             entity.HasOne(e => e.Equipe)
                   .WithMany()
@@ -130,11 +269,12 @@ public class PeiFeiraDbContext : DbContext
             entity.HasIndex(e => e.Status);
         });
 
-        // Configuração 
+        // ===== MEMBRO_EQUIPE =====
         modelBuilder.Entity<MembroEquipe>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Funcao).HasConversion<int>();
+            entity.Property(e => e.Cargo).HasConversion<int>().IsRequired();
+            entity.Property(e => e.Funcao).HasMaxLength(100);
             entity.Property(e => e.IngressouEm).IsRequired();
             entity.Property(e => e.SaiuEm);
 
@@ -147,45 +287,17 @@ public class PeiFeiraDbContext : DbContext
                   .HasForeignKey(e => e.EquipeId)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasIndex(e => new { e.UsuarioId, e.EquipeId, e.IsActive })
-                  .HasDatabaseName("IX_MembroEquipe_Usuario_Equipe_Active");
+            entity.HasOne(e => e.PerfilAluno)
+                  .WithMany(pa => pa.MembroEquipes)
+                  .HasForeignKey(e => e.PerfilAlunoId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(e => new { e.PerfilAlunoId, e.EquipeId, e.IsActive })
+                  .HasDatabaseName("IX_MembroEquipe_PerfilAluno_Equipe_Active");
             entity.HasIndex(e => e.IsActive);
         });
 
-        // Configuração Projeto
-        modelBuilder.Entity<Projeto>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Titulo).HasMaxLength(300).IsRequired(); 
-            entity.Property(e => e.Tema).HasMaxLength(500).IsRequired(); 
-            entity.Property(e => e.DesafioProposto).HasMaxLength(2000).IsRequired(); 
-
-            entity.Property(e => e.NomeEmpresa).HasMaxLength(300);
-            entity.Property(e => e.EnderecoCompleto).HasMaxLength(500);
-            entity.Property(e => e.Cidade).HasMaxLength(100);
-            entity.Property(e => e.RedeSocial).HasMaxLength(300);
-            entity.Property(e => e.Contato).HasMaxLength(200);
-
-            entity.Property(e => e.NomeResponsavel).HasMaxLength(200);
-            entity.Property(e => e.CargoResponsavel).HasMaxLength(150);
-            entity.Property(e => e.TelefoneResponsavel).HasMaxLength(20);
-            entity.Property(e => e.EmailResponsavel).HasMaxLength(255);
-            entity.Property(e => e.RedesSociaisResponsavel).HasMaxLength(300);
-
-            entity.Property(e => e.CriadoEm).IsRequired();
-            entity.Property(e => e.AlteradoEm);
-            entity.Property(e => e.DeletadoEm);
-
-            // Relacionamento 1:1 com Equipe
-            entity.HasOne(p => p.Equipe)
-                  .WithOne(e => e.Projeto)
-                  .HasForeignKey<Projeto>(p => p.EquipeId)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasIndex(e => e.EquipeId).IsUnique();
-            entity.HasIndex(e => e.IsActive);
-        });
-
+        // ===== AVALIACAO =====
         modelBuilder.Entity<Avaliacao>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -201,14 +313,8 @@ public class PeiFeiraDbContext : DbContext
             entity.Property(e => e.LinguagemTempo).IsRequired();
             entity.Property(e => e.QualidadeRespostas).IsRequired();
 
-            entity.Property(e => e.PontuacaoTotal)
-                  .HasPrecision(5, 2) // 999.99 (5 dígitos total, 2 decimais)
-                  .IsRequired();
-
-            entity.Property(e => e.NotaFinal)
-                  .HasPrecision(4, 2) // 99.99 (4 dígitos total, 2 decimais)
-                  .IsRequired();
-
+            entity.Property(e => e.PontuacaoTotal).HasPrecision(5, 2);
+            entity.Property(e => e.NotaFinal).HasPrecision(4, 2);
             entity.Property(e => e.Comentarios).HasMaxLength(1000);
 
             entity.Property(e => e.CriadoEm).IsRequired();
@@ -234,7 +340,6 @@ public class PeiFeiraDbContext : DbContext
         });
 
         ApplyGlobalQueryFilters(modelBuilder);
-
     }
 
     private static void ApplyGlobalQueryFilters(ModelBuilder modelBuilder)
@@ -287,12 +392,10 @@ public class PeiFeiraDbContext : DbContext
 
                 case EntityState.Modified:
                     auditable.AlteradoEm = now;
-                    // Prevenir mudança de CriadoEm
                     entry.Property(nameof(Auditable.CriadoEm)).IsModified = false;
                     break;
 
                 case EntityState.Deleted:
-                    // Soft delete
                     if (entry.Entity is IBaseEntity baseEntity)
                     {
                         entry.State = EntityState.Modified;
