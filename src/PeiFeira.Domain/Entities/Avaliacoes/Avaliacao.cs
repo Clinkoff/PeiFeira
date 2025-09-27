@@ -1,9 +1,11 @@
 ﻿using PeiFeira.Domain.Bases;
 using PeiFeira.Domain.Entities.Equipes;
 using PeiFeira.Domain.Entities.Usuarios;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PeiFeira.Domain.Entities.Avaliacoes;
 
+[Table("Avaliacao")]
 public class Avaliacao : Auditable, IBaseEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();

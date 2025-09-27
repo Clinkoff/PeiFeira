@@ -41,6 +41,41 @@ public class PeiFeiraDbContext : DbContext
             entity.HasIndex(e => e.Email).IsUnique();
 
             entity.HasIndex(e => e.IsActive);
+
+            entity.HasOne(e => e.PerfilAluno)
+                  .WithOne(pa => pa.Usuario)
+                  .HasForeignKey<PerfilAluno>(pa => pa.UsuarioId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.PerfilProfessor)
+                  .WithOne(p => p.Usuario)
+                  .HasForeignKey<PerfilProfessor>(p => p.UsuarioId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<PerfilAluno>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Curso).HasMaxLength(200);
+            entity.Property(e => e.Periodo);
+            entity.HasIndex(e => e.UsuarioId).IsUnique();
+            entity.Property(e => e.CriadoEm).IsRequired();
+            entity.Property(e => e.AlteradoEm);
+            entity.Property(e => e.DeletadoEm);
+            entity.HasIndex(e => e.IsActive);
+        });
+
+        modelBuilder.Entity<PerfilProfessor>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => e.UsuarioId).IsUnique();
+            entity.Property(e => e.Departamento).HasMaxLength(200);
+            entity.Property(e => e.AreaEspecializacao).HasMaxLength(300);
+            entity.Property(e => e.Titulacao).HasMaxLength(100);
+            entity.Property(e => e.CriadoEm).IsRequired();
+            entity.Property(e => e.AlteradoEm);
+            entity.Property(e => e.DeletadoEm);
+            entity.HasIndex(e => e.IsActive);
         });
 
         // Configuração 
@@ -106,11 +141,6 @@ public class PeiFeiraDbContext : DbContext
             entity.Property(e => e.CriadoEm).IsRequired();
             entity.Property(e => e.AlteradoEm);
             entity.Property(e => e.DeletadoEm);
-
-            entity.HasOne(e => e.Usuario)
-                  .WithMany(u => u.MembroEquipes)
-                  .HasForeignKey(e => e.UsuarioId)
-                  .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(e => e.Equipe)
                   .WithMany(eq => eq.Membros)

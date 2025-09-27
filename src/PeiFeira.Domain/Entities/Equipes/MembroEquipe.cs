@@ -1,8 +1,10 @@
 ﻿using PeiFeira.Domain.Bases;
 using PeiFeira.Domain.Entities.Usuarios;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PeiFeira.Domain.Entities.Equipes;
 
+[Table("MembroEquipe")]
 public class MembroEquipe : Auditable, IBaseEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();
@@ -14,7 +16,6 @@ public class MembroEquipe : Auditable, IBaseEntity
     public DateTime IngressouEm { get; set; } = DateTime.UtcNow;
     public DateTime? SaiuEm { get; set; }
 
-    // Navigation Properties
     public virtual Equipe Equipe { get; set; } = null!;
     public virtual Usuario Usuario { get; set; } = null!;
 }

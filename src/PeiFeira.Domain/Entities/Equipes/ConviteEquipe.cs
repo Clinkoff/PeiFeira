@@ -1,9 +1,11 @@
 ﻿using PeiFeira.Domain.Bases;
 using PeiFeira.Domain.Entities.Usuarios;
 using PeiFeira.Domain.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PeiFeira.Domain.Entities.Equipes;
 
+[Table("ConviteEquipe")]
 public class ConviteEquipe : Auditable, IBaseEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();

@@ -1,9 +1,11 @@
 ﻿using PeiFeira.Domain.Bases;
 using PeiFeira.Domain.Entities.Avaliacoes;
 using PeiFeira.Domain.Entities.Equipes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PeiFeira.Domain.Entities.Usuarios;
 
+[Table("Usuario")]
 public class Usuario : Auditable, IBaseEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();
@@ -15,7 +17,7 @@ public class Usuario : Auditable, IBaseEntity
     public string SenhaHash { get; set; } = string.Empty;
     public UserRole Role { get; set; }
 
-    // Navigation Properties
-    public virtual ICollection<MembroEquipe> MembroEquipes { get; set; } = new List<MembroEquipe>();
+    public virtual PerfilAluno? PerfilAluno { get; set; }
+    public virtual PerfilProfessor? PerfilProfessor { get; set; }
     public virtual ICollection<Avaliacao> Avaliacoes { get; set; } = new List<Avaliacao>();
 }

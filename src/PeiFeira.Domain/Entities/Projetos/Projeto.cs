@@ -1,8 +1,10 @@
 ﻿using PeiFeira.Domain.Bases;
 using PeiFeira.Domain.Entities.Equipes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PeiFeira.Domain.Entities.Projetos;
 
+[Table("Projeto")]
 public class Projeto : Auditable, IBaseEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();
