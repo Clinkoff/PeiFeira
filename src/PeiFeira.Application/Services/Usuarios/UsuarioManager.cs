@@ -1,4 +1,5 @@
-using BCrypt.Net;
+using PeiFeira.Application.Services.Usuarios.Services;
+using PeiFeira.Application.Services.Usuarios.Services.PerfilCreation;
 using PeiFeira.Communication.Requests.Usuario;
 using PeiFeira.Communication.Responses.Usuario;
 using PeiFeira.Domain.Entities.Usuarios;
@@ -9,42 +10,51 @@ namespace PeiFeira.Application.Services.Usuarios;
 public class UsuarioManager : IUsuarioManager
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ValidationService _validationService;
+    private readonly IUsuarioValidator _usuarioValidator;
+    private readonly IPasswordService _passwordService;
+    private readonly PerfilCreationService _perfilCreationService;
 
-    public UsuarioManager(IUnitOfWork unitOfWork, ValidationService validationService)
+    public UsuarioManager(
+        IUnitOfWork unitOfWork,
+        IUsuarioValidator usuarioValidator,
+        IPasswordService passwordService,
+        PerfilCreationService perfilCreationService)
     {
         _unitOfWork = unitOfWork;
-        _validationService = validationService;
+        _usuarioValidator = usuarioValidator;
+        _passwordService = passwordService;
+        _perfilCreationService = perfilCreationService;
     }
 
     public async Task<UsuarioResponse> CreateAsync(CreateUsuarioRequest request)
     {
-        await _validationService.ValidateAsync(request);
+        await _usuarioValidator.ValidateCreateRequestAsync(request);
+        await _usuarioValidator.ValidateUniquenessAsync(request.Matricula, request.Email);
 
-        if (await _unitOfWork.Usuarios.ExistsByMatriculaAsync(request.Matricula))
-            throw new InvalidOperationException("Matrícula já existe");
-
-        if (await _unitOfWork.Usuarios.ExistsByEmailAsync(request.Email))
-            throw new InvalidOperationException("Email já existe");
-
-        var usuario = new Usuario
-        {
-            Matricula = request.Matricula,
-            Nome = request.Nome,
-            Email = request.Email,
-            SenhaHash = BCrypt.Net.BCrypt.HashPassword(request.Senha),
-            Role = (UserRole)request.Role
-        };
-
+        var usuario = CreateUsuarioFromRequest(request);
         var created = await _unitOfWork.Usuarios.CreateAsync(usuario);
+
+        await _perfilCreationService.CreatePerfilAsync(usuario, request);
         await _unitOfWork.SaveChangesAsync();
 
         return MapToResponse(created);
     }
 
+    private Usuario CreateUsuarioFromRequest(CreateUsuarioRequest request)
+    {
+        return new Usuario
+        {
+            Matricula = request.Matricula,
+            Nome = request.Nome,
+            Email = request.Email,
+            SenhaHash = _passwordService.HashPassword(request.Senha), // DIP: Abstração de hash
+            Role = (UserRole)request.Role
+        };
+    }
+
     public async Task<UsuarioResponse> UpdateAsync(Guid id, UpdateUsuarioRequest request)
     {
-        await _validationService.ValidateAsync(request);
+        await _usuarioValidator.ValidateUpdateRequestAsync(request);
 
         var usuario = await _unitOfWork.Usuarios.GetByIdAsync(id);
         if (usuario == null)
@@ -115,13 +125,13 @@ public class UsuarioManager : IUsuarioManager
 
     public async Task<UsuarioResponse?> LoginAsync(LoginRequest request)
     {
-        await _validationService.ValidateAsync(request);
+        await _usuarioValidator.ValidateLoginRequestAsync(request);
 
         var usuario = await _unitOfWork.Usuarios.GetByMatriculaAsync(request.Matricula);
         if (usuario == null || !usuario.IsActive)
             return null;
 
-        if (!BCrypt.Net.BCrypt.Verify(request.Senha, usuario.SenhaHash))
+        if (!_passwordService.VerifyPassword(request.Senha, usuario.SenhaHash))
             return null;
 
         return MapToResponse(usuario);
@@ -129,16 +139,16 @@ public class UsuarioManager : IUsuarioManager
 
     public async Task<bool> MudarSenhaAsync(Guid id, MudarSenhaRequest request)
     {
-        await _validationService.ValidateAsync(request);
+        await _usuarioValidator.ValidateMudarSenhaRequestAsync(request);
 
         var usuario = await _unitOfWork.Usuarios.GetByIdAsync(id);
         if (usuario == null)
             return false;
 
-        if (!BCrypt.Net.BCrypt.Verify(request.SenhaAtual, usuario.SenhaHash))
+        if (!_passwordService.VerifyPassword(request.SenhaAtual, usuario.SenhaHash))
             throw new UnauthorizedAccessException("Senha atual incorreta");
 
-        usuario.SenhaHash = BCrypt.Net.BCrypt.HashPassword(request.NovaSenha);
+        usuario.SenhaHash = _passwordService.HashPassword(request.NovaSenha);
         await _unitOfWork.Usuarios.UpdateAsync(usuario);
         await _unitOfWork.SaveChangesAsync();
 

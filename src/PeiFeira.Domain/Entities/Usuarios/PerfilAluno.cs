@@ -12,7 +12,8 @@ public class PerfilAluno : Auditable, IBaseEntity
     public Guid UsuarioId { get; set; } // Foreign key to Usuario
     public bool IsActive { get; set; } = true;
     public string? Curso { get; set; }
-    public int? Periodo { get; set; }
+    public string? Periodo { get; set; }
+    public string? Semestre { get; set; }
     public virtual Usuario Usuario { get; set; } = null!;
     public virtual ICollection<MembroEquipe> MembroEquipes { get; set; } = new List<MembroEquipe>();
     public virtual ICollection<AlunoTurma> Turmas { get; set; } = new List<AlunoTurma>(); // Histórico de turmas

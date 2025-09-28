@@ -13,7 +13,7 @@ public class LoginRequestValidator : BaseValidator<LoginRequest>
             .Must(BeValidMatricula)
             .WithMessage("Matrícula deve ter 10 dígitos");
 
-        RuleFor(x => x.Senha)
+        RuleFor(x => x.SenhaHash)
             .NotEmpty()
             .WithMessage("Senha é obrigatória");
     }

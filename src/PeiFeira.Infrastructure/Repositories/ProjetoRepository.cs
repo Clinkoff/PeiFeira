@@ -4,7 +4,7 @@ using PeiFeira.Infrastructure.Data;
 
 namespace PeiFeira.Infrastructure.Repositories;
 
-public class ProjetoRepository : BaseRepository<Projeto> // IProjetoRepository
+public class ProjetoRepository : BaseRepository<Projeto> // , IProjetoRepository
 {
     public ProjetoRepository(PeiFeiraDbContext context) : base(context)
     {

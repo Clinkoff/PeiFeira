@@ -18,6 +18,8 @@ public class UnitOfWork : IUnitOfWork
     // Repositórios de relacionamento
     private IMembroEquipeRepository? _membrosEquipe;
     private IConviteEquipeRepository? _convitesEquipe;
+    private IPerfilAlunoRepository? _perfisAluno;
+    private IPerfilProfessorRepository? _perfisProfessor;
 
     public UnitOfWork(PeiFeiraDbContext context)
     {
@@ -38,20 +40,11 @@ public class UnitOfWork : IUnitOfWork
 
     public IConviteEquipeRepository ConvitesEquipe => throw new NotImplementedException();
 
-    //public IEquipeRepository Equipes =>
-    //    _equipes ??= new EquipeRepository(_context);
+    public IPerfilAlunoRepository PerfisAluno =>
+        _perfisAluno ??= new PerfilAlunoRepository(_context);
 
-    //public IProjetoRepository Projetos =>
-    //    _projetos ??= new ProjetoRepository(_context);
-
-    //public IAvaliacaoRepository Avaliacoes =>
-    //    _avaliacoes ??= new AvaliacaoRepository(_context);
-
-    //public IMembroEquipeRepository MembrosEquipe =>
-    //    _membrosEquipe ??= new MembroEquipeRepository(_context);
-
-    //  public IConviteEquipeRepository ConvitesEquipe =>
-    //    _convitesEquipe ??= new ConviteEquipeRepository(_context);
+    public IPerfilProfessorRepository PerfisProfessor =>
+        _perfisProfessor ??= new PerfilProfessorRepository(_context);
 
     // Controle de transações
     public async Task<int> SaveChangesAsync()

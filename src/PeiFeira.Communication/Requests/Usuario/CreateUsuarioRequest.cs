@@ -8,4 +8,6 @@ public class CreateUsuarioRequest
    public string Senha { get; set; } = string.Empty;
    public int Role { get; set; }
 
+   public PerfilAlunoRequest? PerfilAluno;
+   public PerfilProfessorRequest? PerfilProfessor;
 }

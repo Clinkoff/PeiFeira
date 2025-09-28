@@ -11,7 +11,11 @@ public interface IUnitOfWork : IDisposable
 
     // REPOSITÓRIOS DE RELACIONAMENTO
     IMembroEquipeRepository MembrosEquipe { get; }
-    IConviteEquipeRepository ConvitesEquipe { get; }  // ← NOVO!
+    IConviteEquipeRepository ConvitesEquipe { get; }
+
+    // REPOSITÓRIOS DE PERFIL
+    IPerfilAlunoRepository PerfisAluno { get; }
+    IPerfilProfessorRepository PerfisProfessor { get; }
 
     // CONTROLE DE TRANSAÇÕES
     Task<int> SaveChangesAsync();

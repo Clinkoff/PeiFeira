@@ -41,6 +41,7 @@ public class UsuarioRepository : BaseRepository<Usuario>, IUsuarioRepository
         return await _dbSet.Where(u => u.Role == UserRole.Professor).ToListAsync();
     }
 
+
     public async Task<IEnumerable<Usuario>> GetAlunosAsync()
     {
         return await _dbSet.Where(u => u.Role == UserRole.Aluno).ToListAsync();

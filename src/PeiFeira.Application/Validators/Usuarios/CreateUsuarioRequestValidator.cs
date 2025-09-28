@@ -32,7 +32,8 @@ public class CreateUsuarioRequestValidator : BaseValidator<CreateUsuarioRequest>
             .WithMessage("Senha deve ter pelo menos 6 caracteres");
 
         RuleFor(x => x.Role)
-            .Must(r => r == 1 || r == 2)
-            .WithMessage("Role deve ser 1 (Aluno) ou 2 (Professor)");
+            .IsInEnum()
+            .WithMessage(" '{Role}' Função inválido");
+                
     }
 }

@@ -14,7 +14,7 @@ public class EquipeValidator : BaseValidator<Equipe>
             .Length(2, 200)
             .WithMessage("Nome deve ter entre 2 e 200 caracteres");
 
-        RuleFor(e => e.LiderId)
+        RuleFor(e => e.LiderPerfilAlunoId)
             .NotEmpty()
             .WithMessage("Líder da equipe é obrigatório")
             .Must(BeValidGuid)

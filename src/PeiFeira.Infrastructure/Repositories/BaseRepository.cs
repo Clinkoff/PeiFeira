@@ -38,7 +38,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
 
     public async Task<T> CreateAsync(T entity)
     {
-        entity.Id = Guid.NewGuid();
+        if (entity.Id == Guid.Empty)
+            entity.Id = Guid.NewGuid();
+
         entity.IsActive = true;
         await _dbSet.AddAsync(entity);
         return entity;

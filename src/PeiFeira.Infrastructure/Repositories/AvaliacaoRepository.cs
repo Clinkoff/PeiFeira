@@ -4,7 +4,7 @@ using PeiFeira.Infrastructure.Data;
 
 namespace PeiFeira.Infrastructure.Repositories;
 
-public class AvaliacaoRepository : BaseRepository<Avaliacao> // IAvaliacaoRepository
+public class AvaliacaoRepository : BaseRepository<Avaliacao>// , IAvaliacaoRepository
 {
     public AvaliacaoRepository(PeiFeiraDbContext context) : base(context)
     {
