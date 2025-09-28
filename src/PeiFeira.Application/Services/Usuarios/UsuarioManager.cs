@@ -48,7 +48,7 @@ public class UsuarioManager : IUsuarioManager
             Nome = request.Nome,
             Email = request.Email,
             SenhaHash = _passwordService.HashPassword(request.Senha), // DIP: Abstração de hash
-            Role = (UserRole)(int)request.Role // Conversão entre enums
+            Role = (UserRole)request.Role // Conversão entre enums
         };
     }
 
@@ -65,7 +65,9 @@ public class UsuarioManager : IUsuarioManager
 
         usuario.Nome = request.Nome;
         usuario.Email = request.Email;
-        usuario.Role = (UserRole)(int)request.Role;
+
+        if (request.Role.HasValue)
+            usuario.Role = (UserRole)request.Role.Value;
 
         var updated = await _unitOfWork.Usuarios.UpdateAsync(usuario);
         await _unitOfWork.SaveChangesAsync();
