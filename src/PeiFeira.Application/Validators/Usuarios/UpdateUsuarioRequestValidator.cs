@@ -20,7 +20,7 @@ public class UpdateUsuarioRequestValidator : BaseValidator<UpdateUsuarioRequest>
             .WithMessage("Email deve ser válido");
 
         RuleFor(x => x.Role)
-            .Must(r => r == 1 || r == 2)
-            .WithMessage("Role deve ser 1 (Aluno) ou 2 (Professor)");
+            .IsInEnum()
+            .WithMessage("Função '{PropertyValue}' é inválida");
     }
 }

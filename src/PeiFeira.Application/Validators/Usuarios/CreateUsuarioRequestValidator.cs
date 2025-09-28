@@ -33,7 +33,7 @@ public class CreateUsuarioRequestValidator : BaseValidator<CreateUsuarioRequest>
 
         RuleFor(x => x.Role)
             .IsInEnum()
-            .WithMessage(" '{Role}' Função inválido");
+            .WithMessage("Função '{PropertyValue}' é inválida");
                 
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace PeiFeira.Communication.Requests.Usuario;
+namespace PeiFeira.Communication.Requests.Usuario;
 
 public class CreateUsuarioRequest
 {

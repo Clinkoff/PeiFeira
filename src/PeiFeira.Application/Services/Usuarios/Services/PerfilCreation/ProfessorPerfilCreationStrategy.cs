@@ -25,13 +25,12 @@ public class ProfessorPerfilCreationStrategy : IPerfilCreationStrategy
 
         var perfilProfessor = new PerfilProfessor
         {
-            Usuario = usuario,
-            Departamento = request.PerfilProfessor.Departamento!,
-            Titulacao = request.PerfilProfessor.Titulacao!,
-            AreaEspecializacao = request.PerfilProfessor.AreaEspecializacao!
+            UsuarioId = usuario.Id, 
+            Departamento = request.PerfilProfessor.Departamento,
+            Titulacao = request.PerfilProfessor.Titulacao,
+            AreaEspecializacao = request.PerfilProfessor.AreaEspecializacao
         };
 
-        usuario.PerfilProfessor = perfilProfessor;
         await _unitOfWork.PerfisProfessor.CreateAsync(perfilProfessor);
     }
 }

@@ -67,7 +67,7 @@ public class PeiFeiraDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Curso).HasMaxLength(200);
-            entity.Property(e => e.Periodo);
+            entity.Property(e => e.Periodo).HasMaxLength(30);
             entity.Property(e => e.Semestre).HasMaxLength(50);
 
             entity.HasIndex(e => e.UsuarioId).IsUnique();

@@ -2,8 +2,8 @@
 
 public enum UserRole
 {
+    Admin = 0,
     Aluno = 1,
     Professor = 2,
-    Admin = 3,           
-    Coordenador = 4,     
+    Coordenador = 3,     
 }
