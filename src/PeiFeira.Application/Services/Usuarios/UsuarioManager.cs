@@ -1,5 +1,6 @@
 using PeiFeira.Application.Services.Usuarios.Services;
 using PeiFeira.Application.Services.Usuarios.Services.PerfilCreation;
+using PeiFeira.Communication.Enums;
 using PeiFeira.Communication.Requests.Usuario;
 using PeiFeira.Communication.Responses.Usuario;
 using PeiFeira.Domain.Entities.Usuarios;
@@ -56,7 +57,7 @@ public class UsuarioManager : IUsuarioManager
     {
         await _usuarioValidator.ValidateUpdateRequestAsync(request);
 
-        var usuario = await _unitOfWork.Usuarios.GetByIdAsync(id);
+        var usuario = await _unitOfWork.Usuarios.GetByIdWithPerfilAsync(id);
         if (usuario == null)
             throw new KeyNotFoundException("Usuário não encontrado");
 
@@ -85,13 +86,13 @@ public class UsuarioManager : IUsuarioManager
 
     public async Task<UsuarioResponse?> GetByIdAsync(Guid id)
     {
-        var usuario = await _unitOfWork.Usuarios.GetByIdAsync(id);
+        var usuario = await _unitOfWork.Usuarios.GetByIdWithPerfilAsync(id);
         return usuario != null ? MapToResponse(usuario) : null;
     }
 
     public async Task<UsuarioResponse?> GetByMatriculaAsync(string matricula)
     {
-        var usuario = await _unitOfWork.Usuarios.GetByMatriculaAsync(matricula);
+        var usuario = await _unitOfWork.Usuarios.GetByMatriculaWithPerfilAsync(matricula);
         return usuario != null ? MapToResponse(usuario) : null;
     }
 
@@ -129,7 +130,7 @@ public class UsuarioManager : IUsuarioManager
     {
         await _usuarioValidator.ValidateLoginRequestAsync(request);
 
-        var usuario = await _unitOfWork.Usuarios.GetByMatriculaAsync(request.Matricula);
+        var usuario = await _unitOfWork.Usuarios.GetByMatriculaWithPerfilAsync(request.Matricula);
         if (usuario == null || !usuario.IsActive)
             return null;
 
@@ -176,9 +177,25 @@ public class UsuarioManager : IUsuarioManager
             Matricula = usuario.Matricula,
             Nome = usuario.Nome,
             Email = usuario.Email,
-            Role = usuario.Role == UserRole.Professor ? "Professor" : "Aluno",
+            Role = (UserRoleDto)usuario.Role,
             CriadoEm = usuario.CriadoEm,
-            AlteradoEm = usuario.AlteradoEm
+            AlteradoEm = usuario.AlteradoEm,
+
+            PerfilAluno = usuario.PerfilAluno != null ? new PerfilAlunoResponse
+             {
+                 Id = usuario.PerfilAluno.Id,
+                 Curso = usuario.PerfilAluno.Curso,
+                 Periodo = usuario.PerfilAluno.Periodo,
+                 Semestre = usuario.PerfilAluno.Semestre
+             } : null,
+
+            PerfilProfessor = usuario.PerfilProfessor != null ? new PerfilProfessorResponse
+            {
+                Id = usuario.PerfilProfessor.Id,
+                Departamento = usuario.PerfilProfessor.Departamento,
+                Titulacao = usuario.PerfilProfessor.Titulacao,
+                AreaEspecializacao = usuario.PerfilProfessor.AreaEspecializacao
+            } : null
         };
     }
 }

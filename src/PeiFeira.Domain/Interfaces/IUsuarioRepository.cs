@@ -4,6 +4,8 @@ namespace PeiFeira.Domain.Interfaces;
 
 public interface IUsuarioRepository : IBaseRepository<Usuario>
 {
+    Task<Usuario?> GetByIdWithPerfilAsync(Guid id);
+    Task<Usuario?> GetByMatriculaWithPerfilAsync(string matricula);
     Task<Usuario?> GetByMatriculaAsync (string matricula);
     Task<Usuario?> GetByEmailAsync (string email);
     Task<bool> ExistsByMatriculaAsync (string Matricula);

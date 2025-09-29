@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.Usuarios;
 using PeiFeira.Communication.Requests.Usuario;
 using PeiFeira.Communication.Responses.Usuario;
-using FluentValidation;
 
 namespace PeiFeira.Api.Controllers;
 
@@ -20,19 +19,8 @@ public class UsuariosController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<UsuarioResponse>> Create([FromBody] CreateUsuarioRequest request)
     {
-        try
-        {
-            var response = await _usuarioAppService.CriarAsync(request);
-            return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
-        }
-        catch (ValidationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return Conflict(ex.Message);
-        }
+        var response = await _usuarioAppService.CriarAsync(request);
+        return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
     }
 
     [HttpGet("{id}")]
@@ -87,23 +75,8 @@ public class UsuariosController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<UsuarioResponse>> Update(Guid id, [FromBody] UpdateUsuarioRequest request)
     {
-        try
-        {
-            var response = await _usuarioAppService.AtualizarAsync(id, request);
-            return Ok(response);
-        }
-        catch (ValidationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return Conflict(ex.Message);
-        }
+        var response = await _usuarioAppService.AtualizarAsync(id, request);
+        return Ok(response);
     }
 
     [HttpDelete("{id}")]
@@ -116,33 +89,15 @@ public class UsuariosController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<UsuarioResponse>> Login([FromBody] LoginRequest request)
     {
-        try
-        {
-            var response = await _usuarioAppService.LoginAsync(request);
-            return response != null ? Ok(response) : Unauthorized("Credenciais inválidas");
-        }
-        catch (ValidationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var response = await _usuarioAppService.LoginAsync(request);
+        return response != null ? Ok(response) : Unauthorized("Credenciais inválidas");
     }
 
     [HttpPut("{id}/mudar-senha")]
     public async Task<ActionResult> MudarSenha(Guid id, [FromBody] MudarSenhaRequest request)
     {
-        try
-        {
-            var result = await _usuarioAppService.MudarSenhaAsync(id, request);
-            return result ? Ok("Senha alterada com sucesso") : NotFound();
-        }
-        catch (ValidationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Unauthorized(ex.Message);
-        }
+        var result = await _usuarioAppService.MudarSenhaAsync(id, request);
+        return result ? Ok("Senha alterada com sucesso") : NotFound();
     }
 
     [HttpGet("exists/matricula/{matricula}")]

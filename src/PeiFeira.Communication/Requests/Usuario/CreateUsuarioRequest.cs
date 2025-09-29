@@ -10,6 +10,6 @@ public class CreateUsuarioRequest
    public string Senha { get; set; } = string.Empty;
    public UserRoleDto Role { get; set; }
 
-   public PerfilAlunoRequest? PerfilAluno;
-   public PerfilProfessorRequest? PerfilProfessor;
+   public PerfilAlunoRequest? PerfilAluno { get; set; }
+   public PerfilProfessorRequest? PerfilProfessor { get; set; }
 }

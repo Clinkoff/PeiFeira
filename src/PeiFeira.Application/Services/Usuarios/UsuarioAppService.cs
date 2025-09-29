@@ -19,51 +19,27 @@ public class UsuarioAppService
     {
         _logger.LogInformation("Iniciando criação de usuário para matrícula: {Matricula}", request.Matricula);
 
-        try
-        {
-            var response = await _usuarioManager.CreateAsync(request);
-            _logger.LogInformation("Usuário criado com sucesso. ID: {Id}", response.Id);
-            return response;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao criar usuário para matrícula: {Matricula}", request.Matricula);
-            throw;
-        }
+        var response = await _usuarioManager.CreateAsync(request);
+        _logger.LogInformation("Usuário criado com sucesso. ID: {Id}", response.Id);
+        return response;
     }
 
     public async Task<UsuarioResponse> AtualizarAsync(Guid id, UpdateUsuarioRequest request)
     {
         _logger.LogInformation("Iniciando atualização de usuário. ID: {Id}", id);
 
-        try
-        {
-            var response = await _usuarioManager.UpdateAsync(id, request);
-            _logger.LogInformation("Usuário atualizado com sucesso. ID: {Id}", id);
-            return response;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao atualizar usuário. ID: {Id}", id);
-            throw;
-        }
+        var response = await _usuarioManager.UpdateAsync(id, request);
+        _logger.LogInformation("Usuário atualizado com sucesso. ID: {Id}", id);
+        return response;
     }
 
     public async Task<bool> ExcluirAsync(Guid id)
     {
         _logger.LogInformation("Iniciando exclusão de usuário. ID: {Id}", id);
 
-        try
-        {
-            var result = await _usuarioManager.DeleteAsync(id);
-            _logger.LogInformation("Usuário excluído com sucesso. ID: {Id}", id);
-            return result;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao excluir usuário. ID: {Id}", id);
-            throw;
-        }
+        var result = await _usuarioManager.DeleteAsync(id);
+        _logger.LogInformation("Usuário excluído com sucesso. ID: {Id}", id);
+        return result;
     }
 
     public async Task<UsuarioResponse?> BuscarPorIdAsync(Guid id)
@@ -112,41 +88,25 @@ public class UsuarioAppService
     {
         _logger.LogInformation("Tentativa de login para matrícula: {Matricula}", request.Matricula);
 
-        try
+        var response = await _usuarioManager.LoginAsync(request);
+        if (response != null)
         {
-            var response = await _usuarioManager.LoginAsync(request);
-            if (response != null)
-            {
-                _logger.LogInformation("Login realizado com sucesso. Usuário: {Id}", response.Id);
-            }
-            else
-            {
-                _logger.LogWarning("Falha no login para matrícula: {Matricula}", request.Matricula);
-            }
-            return response;
+            _logger.LogInformation("Login realizado com sucesso. Usuário: {Id}", response.Id);
         }
-        catch (Exception ex)
+        else
         {
-            _logger.LogError(ex, "Erro durante login para matrícula: {Matricula}", request.Matricula);
-            throw;
+            _logger.LogWarning("Falha no login para matrícula: {Matricula}", request.Matricula);
         }
+        return response;
     }
 
     public async Task<bool> MudarSenhaAsync(Guid id, MudarSenhaRequest request)
     {
         _logger.LogInformation("Iniciando mudança de senha para usuário: {Id}", id);
 
-        try
-        {
-            var result = await _usuarioManager.MudarSenhaAsync(id, request);
-            _logger.LogInformation("Senha alterada com sucesso para usuário: {Id}", id);
-            return result;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao alterar senha para usuário: {Id}", id);
-            throw;
-        }
+        var result = await _usuarioManager.MudarSenhaAsync(id, request);
+        _logger.LogInformation("Senha alterada com sucesso para usuário: {Id}", id);
+        return result;
     }
 
     public async Task<bool> ExisteMatriculaAsync(string matricula)

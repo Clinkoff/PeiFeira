@@ -46,4 +46,20 @@ public class UsuarioRepository : BaseRepository<Usuario>, IUsuarioRepository
     {
         return await _dbSet.Where(u => u.Role == UserRole.Aluno).ToListAsync();
     }
+
+    public async Task<Usuario?> GetByIdWithPerfilAsync(Guid id)
+    {
+        return await _dbSet
+            .Include(u => u.PerfilAluno)
+            .Include(u => u.PerfilProfessor)
+            .FirstOrDefaultAsync(u => u.Id == id);
+    }
+
+    public async Task<Usuario?> GetByMatriculaWithPerfilAsync(string matricula)
+    {
+        return await _dbSet
+            .Include(u => u.PerfilAluno)
+            .Include(u => u.PerfilProfessor)
+            .FirstOrDefaultAsync(u => u.Matricula == matricula);
+    }
 }
