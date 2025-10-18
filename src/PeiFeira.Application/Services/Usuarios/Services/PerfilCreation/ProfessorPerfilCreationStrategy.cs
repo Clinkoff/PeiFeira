@@ -1,6 +1,6 @@
 using PeiFeira.Communication.Requests.Usuario;
 using PeiFeira.Domain.Entities.Usuarios;
-using PeiFeira.Domain.Interfaces;
+using PeiFeira.Domain.Interfaces.Repositories;
 
 namespace PeiFeira.Application.Services.Usuarios.Services.PerfilCreation;
 

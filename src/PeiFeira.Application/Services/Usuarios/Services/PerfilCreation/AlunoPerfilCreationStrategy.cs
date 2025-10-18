@@ -1,6 +1,6 @@
 using PeiFeira.Communication.Requests.Usuario;
 using PeiFeira.Domain.Entities.Usuarios;
-using PeiFeira.Domain.Interfaces;
+using PeiFeira.Domain.Interfaces.Repositories;
 
 namespace PeiFeira.Application.Services.Usuarios.Services.PerfilCreation;
 
@@ -27,8 +27,7 @@ public class AlunoPerfilCreationStrategy : IPerfilCreationStrategy
         {
             Usuario = usuario,
             Curso = request.PerfilAluno.Curso!,
-            Semestre = request.PerfilAluno.Semestre!,
-            Periodo = request.PerfilAluno.Periodo!
+            Turno = request.PerfilAluno.Turno
         };
 
         usuario.PerfilAluno = perfilAluno;

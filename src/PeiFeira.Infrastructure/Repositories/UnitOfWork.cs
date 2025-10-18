@@ -1,6 +1,12 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using PeiFeira.Domain.Interfaces;
+using PeiFeira.Domain.Interfaces.DisciplinasPI;
+using PeiFeira.Domain.Interfaces.Usuarios;
+using PeiFeira.Domain.Interfaces.Equipes;
+using PeiFeira.Domain.Interfaces.Repositories;
 using PeiFeira.Infrastructure.Data;
+using PeiFeira.Domain.Interfaces.Avaliacoes;
+using PeiFeira.Domain.Interfaces.Projetos;
 
 namespace PeiFeira.Infrastructure.Repositories;
 
@@ -20,6 +26,10 @@ public class UnitOfWork : IUnitOfWork
     private IConviteEquipeRepository? _convitesEquipe;
     private IPerfilAlunoRepository? _perfisAluno;
     private IPerfilProfessorRepository? _perfisProfessor;
+
+    // Repositórios de Disciplina PI
+    private IDisciplinaPIRepository? _disciplinasPI;
+    private IDisciplinaPITurmaRepository? _disciplinaPITurmas;
 
     public UnitOfWork(PeiFeiraDbContext context)
     {
@@ -45,6 +55,12 @@ public class UnitOfWork : IUnitOfWork
 
     public IPerfilProfessorRepository PerfisProfessor =>
         _perfisProfessor ??= new PerfilProfessorRepository(_context);
+
+    public IDisciplinaPIRepository DisciplinasPI =>
+        _disciplinasPI ??= new DisciplinaPIRepository(_context);
+
+    public IDisciplinaPITurmaRepository DisciplinaPITurmas =>
+        _disciplinaPITurmas ??= new DisciplinaPITurmaRepository(_context);
 
     // Controle de transações
     public async Task<int> SaveChangesAsync()

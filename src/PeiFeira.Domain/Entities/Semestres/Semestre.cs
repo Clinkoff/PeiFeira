@@ -17,5 +17,4 @@ public class Semestre : Auditable, IBaseEntity
     public DateTime DataFim { get; set; }
 
     public virtual ICollection<Turma> Turmas { get; set; } = new List<Turma>();
-    public virtual ICollection<Projeto> Projetos { get; set; } = new List<Projeto>();
 }

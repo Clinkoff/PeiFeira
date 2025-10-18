@@ -1,6 +1,6 @@
 ﻿using PeiFeira.Domain.Entities.Equipes;
 
-namespace PeiFeira.Domain.Interfaces;
+namespace PeiFeira.Domain.Interfaces.Equipes;
 
 public interface IEquipeRepository : IBaseRepository<Equipe>
 {

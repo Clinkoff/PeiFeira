@@ -1,5 +1,5 @@
 ﻿using PeiFeira.Domain.Entities.Usuarios;
-using PeiFeira.Domain.Interfaces;
+using PeiFeira.Domain.Interfaces.Usuarios;
 using PeiFeira.Infrastructure.Data;
 
 namespace PeiFeira.Infrastructure.Repositories;

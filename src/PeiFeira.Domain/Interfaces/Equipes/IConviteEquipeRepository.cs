@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PeiFeira.Domain.Interfaces;
+namespace PeiFeira.Domain.Interfaces.Equipes;
 
 public interface IConviteEquipeRepository : IBaseRepository<ConviteEquipe>
 {

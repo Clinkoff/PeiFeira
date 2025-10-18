@@ -6,8 +6,12 @@ using PeiFeira.Application.Services;
 using PeiFeira.Application.Services.Usuarios;
 using PeiFeira.Application.Services.Usuarios.Services;
 using PeiFeira.Application.Services.Usuarios.Services.PerfilCreation;
+using PeiFeira.Application.Services.DisciplinasPI;
 using PeiFeira.Domain.Interfaces;
+using PeiFeira.Domain.Interfaces.DisciplinasPI;
+using PeiFeira.Domain.Interfaces.Usuarios;
 using PeiFeira.Api.Filters;
+using PeiFeira.Domain.Interfaces.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +35,8 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 //builder.Services.AddScoped<IConviteEquipeRepository, ConviteEquipeRepository>();
 builder.Services.AddScoped<IPerfilAlunoRepository, PerfilAlunoRepository>();
 builder.Services.AddScoped<IPerfilProfessorRepository, PerfilProfessorRepository>();
+builder.Services.AddScoped<IDisciplinaPIRepository, DisciplinaPIRepository>();
+builder.Services.AddScoped<IDisciplinaPITurmaRepository, DisciplinaPITurmaRepository>();
 
 // Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -47,6 +53,10 @@ builder.Services.AddScoped<IPerfilCreationStrategy, ProfessorPerfilCreationStrat
 
 builder.Services.AddScoped<UsuarioManager>();
 builder.Services.AddScoped<UsuarioAppService>();
+
+// DisciplinaPI Services
+builder.Services.AddScoped<IDisciplinaPIManager, DisciplinaPIManager>();
+builder.Services.AddScoped<DisciplinaPIAppService>();
 
 // FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<ValidationService>();

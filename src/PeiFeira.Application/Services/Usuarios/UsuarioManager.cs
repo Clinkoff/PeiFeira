@@ -4,7 +4,7 @@ using PeiFeira.Communication.Enums;
 using PeiFeira.Communication.Requests.Usuario;
 using PeiFeira.Communication.Responses.Usuario;
 using PeiFeira.Domain.Entities.Usuarios;
-using PeiFeira.Domain.Interfaces;
+using PeiFeira.Domain.Interfaces.Repositories;
 
 namespace PeiFeira.Application.Services.Usuarios;
 
@@ -185,8 +185,7 @@ public class UsuarioManager : IUsuarioManager
              {
                  Id = usuario.PerfilAluno.Id,
                  Curso = usuario.PerfilAluno.Curso,
-                 Periodo = usuario.PerfilAluno.Periodo,
-                 Semestre = usuario.PerfilAluno.Semestre
+                 Turno = usuario.PerfilAluno.Turno
              } : null,
 
             PerfilProfessor = usuario.PerfilProfessor != null ? new PerfilProfessorResponse

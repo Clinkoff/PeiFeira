@@ -1,6 +1,6 @@
 ﻿using PeiFeira.Domain.Entities.Projetos;
 
-namespace PeiFeira.Domain.Interfaces;
+namespace PeiFeira.Domain.Interfaces.Projetos;
 
 public interface IProjetoRepository : IBaseRepository<Projeto>
 {

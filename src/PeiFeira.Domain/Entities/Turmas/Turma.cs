@@ -19,9 +19,7 @@ public class Turma : Auditable, IBaseEntity
     public string? Curso { get; set; } 
     public int? Periodo { get; set; }
     public string? Turno { get; set; } // Manhã, Tarde, Noite, Integral
-    public TipoTurma Tipo { get; set; }
 
     public virtual Semestre Semestre { get; set; } = null!;
     public virtual ICollection<AlunoTurma> AlunosTurma { get; set; } = new List<AlunoTurma>();
-    public virtual ICollection<Projeto> Projetos { get; set; } = new List<Projeto>();
 }

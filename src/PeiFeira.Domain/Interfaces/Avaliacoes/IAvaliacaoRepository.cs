@@ -1,6 +1,6 @@
 ﻿using PeiFeira.Domain.Entities.Avaliacoes;
 
-namespace PeiFeira.Domain.Interfaces;
+namespace PeiFeira.Domain.Interfaces.Avaliacoes;
 
 public interface IAvaliacaoRepository : IBaseRepository<Avaliacao>
 {

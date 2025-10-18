@@ -13,16 +13,10 @@ public class ProjetoValidator : BaseValidator<Projeto>
             .Length(5, 300)
             .WithMessage("Título deve ter entre 5 e 300 caracteres");
 
-        RuleFor(p => p.Tema)
-            .NotEmpty()
-            .WithMessage("Tema do projeto é obrigatório")
-            .Length(5, 500)
-            .WithMessage("Tema deve ter entre 5 e 500 caracteres");
-
         RuleFor(p => p.DesafioProposto)
             .NotEmpty()
             .WithMessage("Desafio proposto é obrigatório")
-            .Length(10, 1000)
-            .WithMessage("Desafio deve ter entre 10 e 1000 caracteres");
+            .Length(10, 2000)
+            .WithMessage("Desafio deve ter entre 10 e 2000 caracteres");
     }
 }
