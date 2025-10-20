@@ -13,6 +13,7 @@ public class Projeto : Auditable, IBaseEntity
     public Guid Id { get; set; } = Guid.NewGuid();
     public bool IsActive { get; set; } = true;
     public Guid DisciplinaPIId { get; set; }
+    public Guid EquipeId { get; set; }
     public string Titulo { get; set; } = string.Empty;
     public string DesafioProposto { get; set; } = string.Empty;
     public StatusProjeto Status { get; set; } = StatusProjeto.EmAndamento;

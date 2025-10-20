@@ -1,25 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
-using FluentValidation;
-using PeiFeira.Infrastructure.Data;
-using PeiFeira.Infrastructure.Repositories;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using PeiFeira.Api.Filters;
 using PeiFeira.Application.Services;
+using PeiFeira.Application.Services.DisciplinasPI;
+using PeiFeira.Application.Services.Matriculas;
+using PeiFeira.Application.Services.Semestres;
+using PeiFeira.Application.Services.Turmas;
 using PeiFeira.Application.Services.Usuarios;
 using PeiFeira.Application.Services.Usuarios.Services;
 using PeiFeira.Application.Services.Usuarios.Services.PerfilCreation;
-using PeiFeira.Application.Services.DisciplinasPI;
-using PeiFeira.Domain.Interfaces;
-using PeiFeira.Domain.Interfaces.DisciplinasPI;
-using PeiFeira.Domain.Interfaces.Usuarios;
-using PeiFeira.Api.Filters;
 using PeiFeira.Domain.Interfaces.Repositories;
+using PeiFeira.Infrastructure.Data;
+using PeiFeira.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ExceptionFilter>();
 });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -27,43 +27,43 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PeiFeiraDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Repositories
-builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-//builder.Services.AddScoped<IEquipeRepository, EquipeRepository>();
-//builder.Services.AddScoped<IProjetoRepository, ProjetoRepository>();
-//builder.Services.AddScoped<IAvaliacaoRepository, AvaliacaoRepository>();
-//builder.Services.AddScoped<IConviteEquipeRepository, ConviteEquipeRepository>();
-builder.Services.AddScoped<IPerfilAlunoRepository, PerfilAlunoRepository>();
-builder.Services.AddScoped<IPerfilProfessorRepository, PerfilProfessorRepository>();
-builder.Services.AddScoped<IDisciplinaPIRepository, DisciplinaPIRepository>();
-builder.Services.AddScoped<IDisciplinaPITurmaRepository, DisciplinaPITurmaRepository>();
+// ========== DEPENDENCY INJECTION ==========
 
-// Unit of Work
+// Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-// Application Services
+// FluentValidation - Registra AbstractValidator<T> automaticamente
+builder.Services.AddValidatorsFromAssemblyContaining<ValidationService>();
+
+// ValidationService (classe concreta)
 builder.Services.AddScoped<ValidationService>();
 
-// SOLID Services
-builder.Services.AddScoped<IPasswordService, PasswordService>();
+// Services customizados
 builder.Services.AddScoped<IUsuarioValidator, UsuarioValidatorService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<PerfilCreationService>();
+
+// Managers
+builder.Services.AddScoped<IUsuarioManager, UsuarioManager>();
+builder.Services.AddScoped<IDisciplinaPIManager, DisciplinaPIManager>();
+builder.Services.AddScoped<ISemestreManager, SemestreManager>();
+builder.Services.AddScoped<ITurmaManager, TurmaManager>();
+builder.Services.AddScoped<IMatriculaManager, MatriculaManager>();
+
+// AppServices
+builder.Services.AddScoped<UsuarioAppService>();
+builder.Services.AddScoped<DisciplinaPIAppService>();
+builder.Services.AddScoped<SemestreAppService>();
+builder.Services.AddScoped<TurmaAppService>();
+builder.Services.AddScoped<IMatriculaTransactionService, MatriculaTransactionService>();
+builder.Services.AddScoped<MatriculaAppService>();
+
+// Strategy Pattern
 builder.Services.AddScoped<IPerfilCreationStrategy, AlunoPerfilCreationStrategy>();
 builder.Services.AddScoped<IPerfilCreationStrategy, ProfessorPerfilCreationStrategy>();
 
-builder.Services.AddScoped<UsuarioManager>();
-builder.Services.AddScoped<UsuarioAppService>();
-
-// DisciplinaPI Services
-builder.Services.AddScoped<IDisciplinaPIManager, DisciplinaPIManager>();
-builder.Services.AddScoped<DisciplinaPIAppService>();
-
-// FluentValidation
-builder.Services.AddValidatorsFromAssemblyContaining<ValidationService>();
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

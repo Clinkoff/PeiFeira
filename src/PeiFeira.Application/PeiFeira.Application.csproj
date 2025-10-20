@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PeiFeira.Communication\PeiFeira.Communication.csproj" />
     <ProjectReference Include="..\PeiFeira.Domain\PeiFeira.Domain.csproj" />
+    <ProjectReference Include="..\PeiFeira.Exception\PeiFeira.Exception.csproj" />
   </ItemGroup>
 
 </Project>

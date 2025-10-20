@@ -34,8 +34,8 @@ public class DisciplinaPIConfiguration : IEntityTypeConfiguration<DisciplinaPI>
               .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(d => d.Professor)
-              .WithMany()
-              .HasForeignKey(d => d.PerfilProfessorId)
-              .OnDelete(DeleteBehavior.Restrict);
+          .WithMany(p => p.DisciplinasProfessor) 
+          .HasForeignKey(d => d.PerfilProfessorId)
+          .OnDelete(DeleteBehavior.Restrict);
     }
 }

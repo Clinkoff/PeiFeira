@@ -6,10 +6,10 @@ namespace PeiFeira.Application.Services.Usuarios;
 
 public class UsuarioAppService
 {
-    private readonly UsuarioManager _usuarioManager;
+    private readonly IUsuarioManager _usuarioManager;
     private readonly ILogger<UsuarioAppService> _logger;
 
-    public UsuarioAppService(UsuarioManager usuarioManager, ILogger<UsuarioAppService> logger)
+    public UsuarioAppService(IUsuarioManager usuarioManager, ILogger<UsuarioAppService> logger)
     {
         _usuarioManager = usuarioManager;
         _logger = logger;

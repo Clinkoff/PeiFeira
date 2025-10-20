@@ -11,7 +11,6 @@ public class Equipe : Auditable, IBaseEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public bool IsActive { get; set; } = true;
-    public Guid ProjetoId { get; set; }
     public Guid LiderPerfilAlunoId { get; set; }
 
     public string Nome { get; set; } = string.Empty;
@@ -20,7 +19,7 @@ public class Equipe : Auditable, IBaseEntity
 
 
     public virtual PerfilAluno Lider { get; set; } = null!;
-    public virtual Projeto Projeto { get; set; } = null!;
+    public virtual Projeto? Projeto { get; set; }
     public virtual ICollection<MembroEquipe> Membros { get; set; } = new List<MembroEquipe>();
     public virtual ICollection<Avaliacao> Avaliacoes { get; set; } = new List<Avaliacao>();
 }

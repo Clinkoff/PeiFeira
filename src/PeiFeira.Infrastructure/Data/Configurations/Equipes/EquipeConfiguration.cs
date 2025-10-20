@@ -23,11 +23,6 @@ public class EquipeConfiguration : IEntityTypeConfiguration<Equipe>
                .HasForeignKey(e => e.LiderPerfilAlunoId)
                .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(e => e.Projeto)
-               .WithOne(p => p.Equipe)
-               .HasForeignKey<Equipe>(e => e.ProjetoId)
-               .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasIndex(e => e.CodigoConvite).IsUnique();
         builder.HasIndex(e => e.LiderPerfilAlunoId);
         builder.HasIndex(e => e.IsActive);

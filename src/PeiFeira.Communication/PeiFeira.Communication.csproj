@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Requests\Avaliacao\" />
-    <Folder Include="Requests\Projeto\" />
+    <Folder Include="Requests\Avaliacoes\" />
+    <Folder Include="Requests\Projetos\" />
   </ItemGroup>
 
 </Project>

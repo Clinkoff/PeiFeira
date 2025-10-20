@@ -1,4 +1,5 @@
 ﻿using PeiFeira.Domain.Bases;
+using PeiFeira.Domain.Entities.Avaliacoes;
 using PeiFeira.Domain.Entities.DisciplinasPI;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,4 +18,6 @@ public class PerfilProfessor : Auditable, IBaseEntity
 
     public virtual Usuario Usuario { get; set; } = null!;
     public virtual ICollection<DisciplinaPI> DisciplinasProfessor { get; set; } = new List<DisciplinaPI>();
+    public virtual ICollection<Avaliacao> Avaliacoes { get; set; } = new List<Avaliacao>();
+
 }

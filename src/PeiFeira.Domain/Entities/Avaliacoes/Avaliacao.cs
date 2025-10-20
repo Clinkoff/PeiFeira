@@ -36,7 +36,7 @@ public class Avaliacao : Auditable, IBaseEntity
     public string? Comentarios { get; set; }
 
     public virtual Equipe Equipe { get; set; } = null!;
-    public virtual Usuario Avaliador { get; set; } = null!;
+    public virtual PerfilProfessor Avaliador { get; set; } = null!;
 
    
 }

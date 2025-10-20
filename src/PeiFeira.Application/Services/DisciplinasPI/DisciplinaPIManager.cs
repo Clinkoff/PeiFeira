@@ -6,6 +6,7 @@ using PeiFeira.Communication.Responses.DisciplinaPI;
 using PeiFeira.Domain.Entities.DisciplinasPI;
 using PeiFeira.Domain.Enums;
 using PeiFeira.Domain.Interfaces.Repositories;
+using PeiFeira.Exception.ExeceptionsBases;
 
 namespace PeiFeira.Application.Services.DisciplinasPI;
 
@@ -31,7 +32,7 @@ public class DisciplinaPIManager : IDisciplinaPIManager
 
         // Validar se já existe disciplina com mesmo nome no semestre
         if (await _unitOfWork.DisciplinasPI.ExistsByNomeAndSemestreIdAsync(request.Nome, request.SemestreId))
-            throw new InvalidOperationException("Já existe uma disciplina com este nome neste semestre");
+            throw new ConflictException("Já existe uma disciplina com este nome neste semestre");
 
         // Criar disciplina
         var disciplina = new DisciplinaPI
@@ -73,7 +74,7 @@ public class DisciplinaPIManager : IDisciplinaPIManager
 
         var disciplina = await _unitOfWork.DisciplinasPI.GetByIdAsync(id);
         if (disciplina == null)
-            throw new KeyNotFoundException("Disciplina PI não encontrada");
+            throw new NotFoundException("Disciplina PI não encontrada");
 
         // Atualizar dados
         disciplina.Nome = request.Nome;

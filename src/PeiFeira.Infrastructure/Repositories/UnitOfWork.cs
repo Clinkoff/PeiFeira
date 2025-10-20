@@ -7,6 +7,8 @@ using PeiFeira.Domain.Interfaces.Repositories;
 using PeiFeira.Infrastructure.Data;
 using PeiFeira.Domain.Interfaces.Avaliacoes;
 using PeiFeira.Domain.Interfaces.Projetos;
+using PeiFeira.Domain.Interfaces.Semestres;
+using PeiFeira.Domain.Interfaces.Turmas;
 
 namespace PeiFeira.Infrastructure.Repositories;
 
@@ -20,12 +22,15 @@ public class UnitOfWork : IUnitOfWork
     private IEquipeRepository? _equipes;
     private IProjetoRepository? _projetos;
     private IAvaliacaoRepository? _avaliacoes;
+    private ISemestre? _semestres;
+    private ITurma? _turmas;
 
     // Repositórios de relacionamento
     private IMembroEquipeRepository? _membrosEquipe;
     private IConviteEquipeRepository? _convitesEquipe;
     private IPerfilAlunoRepository? _perfisAluno;
     private IPerfilProfessorRepository? _perfisProfessor;
+    private IAlunoTurmaRepository? _alunoTurmas;
 
     // Repositórios de Disciplina PI
     private IDisciplinaPIRepository? _disciplinasPI;
@@ -40,16 +45,21 @@ public class UnitOfWork : IUnitOfWork
     public IUsuarioRepository Usuarios =>
         _usuarios ??= new UsuarioRepository(_context);
 
-    public IEquipeRepository Equipes => throw new NotImplementedException();
+    public IEquipeRepository Equipes =>
+        _equipes ??= new EquipeRepository(_context);
 
-    public IProjetoRepository Projetos => throw new NotImplementedException();
+    public IProjetoRepository Projetos =>
+        _projetos ??= new ProjetoRepository(_context);
 
-    public IAvaliacaoRepository Avaliacoes => throw new NotImplementedException();
+    public IAvaliacaoRepository Avaliacoes =>
+        _avaliacoes ??= new AvaliacaoRepository(_context);
 
-    public IMembroEquipeRepository MembrosEquipe => throw new NotImplementedException();
+    public IMembroEquipeRepository MembrosEquipe =>
+        _membrosEquipe ??= new MembroEquipeRepository(_context);
 
-    public IConviteEquipeRepository ConvitesEquipe => throw new NotImplementedException();
-
+    public IConviteEquipeRepository ConvitesEquipe =>
+        _convitesEquipe ??= new ConviteEquipeRepository(_context);
+   
     public IPerfilAlunoRepository PerfisAluno =>
         _perfisAluno ??= new PerfilAlunoRepository(_context);
 
@@ -61,6 +71,14 @@ public class UnitOfWork : IUnitOfWork
 
     public IDisciplinaPITurmaRepository DisciplinaPITurmas =>
         _disciplinaPITurmas ??= new DisciplinaPITurmaRepository(_context);
+
+    public ISemestre Semestres =>
+       _semestres ??= new SemestreRepository(_context);
+
+    public ITurma Turmas =>
+        _turmas ??= new TurmaRepository(_context);
+    public IAlunoTurmaRepository AlunoTurmas =>
+        _alunoTurmas ??= new AlunoTurmaRepository(_context);
 
     // Controle de transações
     public async Task<int> SaveChangesAsync()

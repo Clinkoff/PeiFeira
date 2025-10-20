@@ -3,6 +3,8 @@ using PeiFeira.Domain.Interfaces.Usuarios;
 using PeiFeira.Domain.Interfaces.Equipes;
 using PeiFeira.Domain.Interfaces.Avaliacoes;
 using PeiFeira.Domain.Interfaces.Projetos;
+using PeiFeira.Domain.Interfaces.Semestres;
+using PeiFeira.Domain.Interfaces.Turmas;
 
 namespace PeiFeira.Domain.Interfaces.Repositories;
 // Claudinho pediu para criar um lugar a onde todos os repositórios fiquem acessíveis,
@@ -14,10 +16,13 @@ public interface IUnitOfWork : IDisposable
     IEquipeRepository Equipes { get; }
     IProjetoRepository Projetos { get; }
     IAvaliacaoRepository Avaliacoes { get; }
+    ISemestre Semestres { get; }
+    ITurma Turmas { get; }
 
     // REPOSITÓRIOS DE RELACIONAMENTO
     IMembroEquipeRepository MembrosEquipe { get; }
     IConviteEquipeRepository ConvitesEquipe { get; }
+    IAlunoTurmaRepository AlunoTurmas { get; }
 
     // REPOSITÓRIOS DE PERFIL
     IPerfilAlunoRepository PerfisAluno { get; }
