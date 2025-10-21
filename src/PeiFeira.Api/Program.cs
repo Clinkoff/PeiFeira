@@ -2,11 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using PeiFeira.Api.Filters;
 using PeiFeira.Application.Services;
+using PeiFeira.Application.Services.ConviteEquipe;
 using PeiFeira.Application.Services.DisciplinasPI;
 using PeiFeira.Application.Services.Equipes;
 using PeiFeira.Application.Services.Matriculas;
 using PeiFeira.Application.Services.Matriculas.Services;
 using PeiFeira.Application.Services.MembrosEquipes;
+using PeiFeira.Application.Services.Projetos;
 using PeiFeira.Application.Services.Semestres;
 using PeiFeira.Application.Services.Turmas;
 using PeiFeira.Application.Services.Usuarios;
@@ -54,7 +56,8 @@ builder.Services.AddScoped<ITurmaManager, TurmaManager>();
 builder.Services.AddScoped<IMatriculaManager, MatriculaManager>();
 builder.Services.AddScoped<IEquipeManager, EquipeManager>();
 builder.Services.AddScoped<IMembroEquipeManager, MembroEquipeManager>();
-
+builder.Services.AddScoped<IConviteEquipeManager, ConviteEquipeManager>();
+builder.Services.AddScoped<IProjetoManager, ProjetoManager>();
 // AppServices
 builder.Services.AddScoped<UsuarioAppService>();
 builder.Services.AddScoped<DisciplinaPIAppService>();
@@ -64,6 +67,8 @@ builder.Services.AddScoped<IMatriculaTransactionService, MatriculaTransactionSer
 builder.Services.AddScoped<MatriculaAppService>();
 builder.Services.AddScoped<EquipeAppService>();
 builder.Services.AddScoped<MembroEquipeAppService>();
+builder.Services.AddScoped<ConviteEquipeAppService>();
+builder.Services.AddScoped<ProjetoAppService>();
 
 // Strategy Pattern
 builder.Services.AddScoped<IPerfilCreationStrategy, AlunoPerfilCreationStrategy>();
