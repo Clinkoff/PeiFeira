@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PeiFeira.Api.Filters;
 using PeiFeira.Application.Services;
 using PeiFeira.Application.Services.DisciplinasPI;
+using PeiFeira.Application.Services.Equipes;
 using PeiFeira.Application.Services.Matriculas;
 using PeiFeira.Application.Services.Semestres;
 using PeiFeira.Application.Services.Turmas;
@@ -49,6 +50,7 @@ builder.Services.AddScoped<IDisciplinaPIManager, DisciplinaPIManager>();
 builder.Services.AddScoped<ISemestreManager, SemestreManager>();
 builder.Services.AddScoped<ITurmaManager, TurmaManager>();
 builder.Services.AddScoped<IMatriculaManager, MatriculaManager>();
+builder.Services.AddScoped<IEquipeManager, EquipeManager>();
 
 // AppServices
 builder.Services.AddScoped<UsuarioAppService>();
@@ -57,6 +59,7 @@ builder.Services.AddScoped<SemestreAppService>();
 builder.Services.AddScoped<TurmaAppService>();
 builder.Services.AddScoped<IMatriculaTransactionService, MatriculaTransactionService>();
 builder.Services.AddScoped<MatriculaAppService>();
+builder.Services.AddScoped<EquipeAppService>();
 
 // Strategy Pattern
 builder.Services.AddScoped<IPerfilCreationStrategy, AlunoPerfilCreationStrategy>();

@@ -15,10 +15,6 @@ public class MatriculasController : ControllerBase
     {
         _matriculaAppService = matriculaAppService;
     }
-
-    /// <summary>
-    /// Matricula um aluno em uma turma
-    /// </summary>
     [HttpPost]
     public async Task<ActionResult<MatriculaResponse>> MatricularAluno([FromBody] CreateMatriculaRequest request)
     {
@@ -26,9 +22,6 @@ public class MatriculasController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
     }
 
-    /// <summary>
-    /// Busca matrícula por ID
-    /// </summary>
     [HttpGet("{id}")]
     public async Task<ActionResult<MatriculaResponse>> GetById(Guid id)
     {
@@ -36,9 +29,6 @@ public class MatriculasController : ControllerBase
         return response != null ? Ok(response) : NotFound();
     }
 
-    /// <summary>
-    /// Lista todos os alunos matriculados em uma turma
-    /// </summary>
     [HttpGet("turma/{turmaId}")]
     public async Task<ActionResult<IEnumerable<MatriculaResponse>>> GetByTurma(Guid turmaId)
     {
@@ -46,9 +36,6 @@ public class MatriculasController : ControllerBase
         return Ok(response);
     }
 
-    /// <summary>
-    /// Lista histórico de matrículas de um aluno
-    /// </summary>
     [HttpGet("aluno/{perfilAlunoId}")]
     public async Task<ActionResult<IEnumerable<MatriculaResponse>>> GetByAluno(Guid perfilAlunoId)
     {
@@ -56,9 +43,6 @@ public class MatriculasController : ControllerBase
         return Ok(response);
     }
 
-    /// <summary>
-    /// Busca matrícula atual de um aluno
-    /// </summary>
     [HttpGet("aluno/{perfilAlunoId}/atual")]
     public async Task<ActionResult<MatriculaResponse>> GetMatriculaAtual(Guid perfilAlunoId)
     {
@@ -66,9 +50,6 @@ public class MatriculasController : ControllerBase
         return response != null ? Ok(response) : NotFound(new { message = "Aluno não possui matrícula ativa" });
     }
 
-    /// <summary>
-    /// Transfere um aluno para outra turma
-    /// </summary>
     [HttpPut("transferir")]
     public async Task<ActionResult> TransferirAluno([FromBody] TransferirAlunoRequest request)
     {
@@ -76,9 +57,6 @@ public class MatriculasController : ControllerBase
         return result ? Ok(new { message = "Aluno transferido com sucesso" }) : BadRequest();
     }
 
-    /// <summary>
-    /// Desmatricula um aluno (soft delete)
-    /// </summary>
     [HttpDelete("{matriculaId}")]
     public async Task<ActionResult> Desmatricular(Guid matriculaId)
     {
