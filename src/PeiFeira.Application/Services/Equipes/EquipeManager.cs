@@ -194,7 +194,7 @@ public class EquipeManager : IEquipeManager
             {
                 Id = equipe.Projeto.Id,
                 Titulo = equipe.Projeto.Titulo ?? string.Empty,
-                Status = equipe.Projeto.ToString()
+                Status = equipe.Projeto.Status.ToString()
             } : null
         };
     }
