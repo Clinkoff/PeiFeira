@@ -5,6 +5,8 @@ using PeiFeira.Application.Services;
 using PeiFeira.Application.Services.DisciplinasPI;
 using PeiFeira.Application.Services.Equipes;
 using PeiFeira.Application.Services.Matriculas;
+using PeiFeira.Application.Services.Matriculas.Services;
+using PeiFeira.Application.Services.MembrosEquipes;
 using PeiFeira.Application.Services.Semestres;
 using PeiFeira.Application.Services.Turmas;
 using PeiFeira.Application.Services.Usuarios;
@@ -51,6 +53,7 @@ builder.Services.AddScoped<ISemestreManager, SemestreManager>();
 builder.Services.AddScoped<ITurmaManager, TurmaManager>();
 builder.Services.AddScoped<IMatriculaManager, MatriculaManager>();
 builder.Services.AddScoped<IEquipeManager, EquipeManager>();
+builder.Services.AddScoped<IMembroEquipeManager, MembroEquipeManager>();
 
 // AppServices
 builder.Services.AddScoped<UsuarioAppService>();
@@ -60,6 +63,7 @@ builder.Services.AddScoped<TurmaAppService>();
 builder.Services.AddScoped<IMatriculaTransactionService, MatriculaTransactionService>();
 builder.Services.AddScoped<MatriculaAppService>();
 builder.Services.AddScoped<EquipeAppService>();
+builder.Services.AddScoped<MembroEquipeAppService>();
 
 // Strategy Pattern
 builder.Services.AddScoped<IPerfilCreationStrategy, AlunoPerfilCreationStrategy>();

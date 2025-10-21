@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using PeiFeira.Application.Services.Matriculas.Services;
 using PeiFeira.Application.Validators.Matriculas;
 using PeiFeira.Communication.Requests.Matriculas;
 using PeiFeira.Communication.Responses.Matriculas;

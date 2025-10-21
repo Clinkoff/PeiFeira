@@ -15,7 +15,7 @@ public class MembroEquipe : Auditable, IBaseEntity
 
     public TeamMemberRole Cargo { get; set; }
     public string? Funcao { get; set; }
-    public DateTime IngressouEm { get; set; } = DateTime.UtcNow;
+    public DateTime IngressouEm { get; set; } = DateTime.UtcNow;  // Quando aceitou entrar na equipe
     public DateTime? SaiuEm { get; set; }
 
     public virtual Equipe Equipe { get; set; } = null!;

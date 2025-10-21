@@ -1,7 +1,7 @@
 ﻿using PeiFeira.Domain.Entities.Turmas;
 using PeiFeira.Domain.Interfaces.Repositories;
 
-namespace PeiFeira.Application.Services.Matriculas;
+namespace PeiFeira.Application.Services.Matriculas.Services;
 
 public interface IMatriculaTransactionService
 {
