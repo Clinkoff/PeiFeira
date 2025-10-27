@@ -1,7 +1,10 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PeiFeira.Api.Filters;
 using PeiFeira.Application.Services;
+using PeiFeira.Application.Services.Auth;
 using PeiFeira.Application.Services.Avaliacoes;
 using PeiFeira.Application.Services.ConviteEquipe;
 using PeiFeira.Application.Services.DisciplinasPI;
@@ -15,9 +18,13 @@ using PeiFeira.Application.Services.Turmas;
 using PeiFeira.Application.Services.Usuarios;
 using PeiFeira.Application.Services.Usuarios.Services;
 using PeiFeira.Application.Services.Usuarios.Services.PerfilCreation;
+using PeiFeira.Application.Validators.Auth;
+using PeiFeira.Domain.Interfaces.Auth;
 using PeiFeira.Domain.Interfaces.Repositories;
 using PeiFeira.Infrastructure.Data;
 using PeiFeira.Infrastructure.Repositories;
+using PeiFeira.Infrastructure.Security;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +34,10 @@ builder.Services.AddControllers(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type => type.FullName);
+});
 
 // Database
 builder.Services.AddDbContext<PeiFeiraDbContext>(options =>
@@ -79,6 +89,57 @@ builder.Services.AddScoped<AvaliacaoAppService>();
 builder.Services.AddScoped<IPerfilCreationStrategy, AlunoPerfilCreationStrategy>();
 builder.Services.AddScoped<IPerfilCreationStrategy, ProfessorPerfilCreationStrategy>();
 
+
+//Auth
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthManager, AuthManager>();
+builder.Services.AddScoped<AuthAppService>();
+
+var jwtSecret = builder.Configuration["Jwt:Secret"]
+    ?? throw new InvalidOperationException("Jwt:Secret não configurado");
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+        ClockSkew = TimeSpan.Zero // Remove delay padrão de 5min na expiração
+    };
+});
+
+// ✅ CONFIGURAR AUTORIZAÇÃO COM POLICIES
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireClaim("role", "Admin"));
+
+    options.AddPolicy("ProfessorOnly", policy =>
+        policy.RequireClaim("role", "Professor"));
+
+    options.AddPolicy("AlunoOnly", policy =>
+        policy.RequireClaim("role", "Aluno"));
+
+    options.AddPolicy("ProfessorOrAdmin", policy =>
+        policy.RequireAssertion(context =>
+            context.User.HasClaim(c => c.Type == "role" &&
+                (c.Value == "Professor" || c.Value == "Admin"))));
+});
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -88,6 +149,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication(); // Ele valida o token primeiro.
 app.UseAuthorization();
 app.MapControllers();
 
