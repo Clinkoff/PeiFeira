@@ -11,27 +11,29 @@ namespace PeiFeira.Api.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly AuthAppService _authAppService;
+    private readonly IAuthManager _authManager;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(AuthAppService authAppService)
+    public AuthController(IAuthManager authManager, ILogger<AuthController> logger)
     {
-        _authAppService = authAppService;
+        _authManager = authManager;
+        _logger = logger;
     }
 
- 
     [HttpPost("login")]
-    [AllowAnonymous] 
+    [AllowAnonymous]
     public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
     {
-        var response = await _authAppService.LoginAsync(request);
+        _logger.LogInformation("Tentativa de login");
+        var response = await _authManager.LoginAsync(request);
+        _logger.LogInformation("Login bem-sucedido - UserId: {UserId}", response.Usuario.Id);
         return Ok(response);
     }
 
     [HttpGet("me")]
-    [Authorize] 
+    [Authorize]
     public async Task<ActionResult<UserInfo>> GetMe()
     {
-        // Pegar ID do usuário do token JWT
         var userIdClaim = User.FindFirst("userId")?.Value;
 
         if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
@@ -39,7 +41,7 @@ public class AuthController : ControllerBase
             return Unauthorized();
         }
 
-        var userInfo = await _authAppService.GetUserInfoAsync(userId);
+        var userInfo = await _authManager.GetUserInfoAsync(userId);
         return Ok(userInfo);
     }
 }

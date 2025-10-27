@@ -2,6 +2,7 @@
 using PeiFeira.Application.Validators.Auth;
 using PeiFeira.Communication.Requests.Auth;
 using PeiFeira.Communication.Responses.Auth;
+using PeiFeira.Domain.Entities.Usuarios;
 using PeiFeira.Domain.Interfaces.Auth;
 using PeiFeira.Domain.Interfaces.Repositories;
 using PeiFeira.Exception.ExeceptionsBases;
@@ -31,7 +32,7 @@ public class AuthManager : IAuthManager
     {
         await _loginValidator.ValidateAndThrowAsync(request);
 
-        var usuario = await _unitOfWork.Usuarios.GetByMatriculaAsync(request.Matricula);
+        var usuario = await _unitOfWork.Usuarios.GetByMatriculaWithPerfilAsync(request.Matricula);
 
         if (usuario == null)
         {
@@ -59,17 +60,7 @@ public class AuthManager : IAuthManager
         {
             Token = token,
             ExpiresIn = expirationSeconds,
-            Usuario = new UserInfo
-            {
-                Id = usuario.Id,
-                Nome = usuario.Nome,
-                Email = usuario.Email,
-                Matricula = usuario.Matricula,
-                Tipo = usuario.Role.ToString(),
-                PerfilId = usuario.Role == UserRole.Aluno
-                    ? usuario.PerfilAluno?.Id
-                    : usuario.PerfilProfessor?.Id
-            }
+            Usuario = MapToUserInfo(usuario) // ← usar método
         };
     }
 
@@ -82,6 +73,11 @@ public class AuthManager : IAuthManager
             throw new NotFoundException("Usuario", userId);
         }
 
+        return MapToUserInfo(usuario);
+    }
+
+    private static UserInfo MapToUserInfo(Usuario usuario)
+    {
         return new UserInfo
         {
             Id = usuario.Id,
@@ -89,9 +85,18 @@ public class AuthManager : IAuthManager
             Email = usuario.Email,
             Matricula = usuario.Matricula,
             Tipo = usuario.Role.ToString(),
-            PerfilId = usuario.Role == UserRole.Aluno
-                ? usuario.PerfilAluno?.Id
-                : usuario.PerfilProfessor?.Id
+            PerfilId = GetPerfilId(usuario)
+        };
+    }
+
+    private static Guid? GetPerfilId(Usuario usuario)
+    {
+        return usuario.Role switch
+        {
+            UserRole.Aluno => usuario.PerfilAluno?.Id,
+            UserRole.Professor => usuario.PerfilProfessor?.Id,
+            UserRole.Coordenador => usuario.PerfilProfessor?.Id,
+            _ => null
         };
     }
 }

@@ -23,27 +23,33 @@ public class TokenService : ITokenService
             ?? throw new InvalidOperationException("Jwt:Secret não configurado");
         var issuer = _configuration["Jwt:Issuer"];
         var audience = _configuration["Jwt:Audience"];
-        var expirationMinutes = int.Parse(_configuration["Jwt:ExpirationMinutes"] ?? "1440");
-
+        if (!int.TryParse(_configuration["Jwt:ExpirationMinutes"], out var expirationMinutes))
+        {
+            expirationMinutes = 1440;
+        }
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
         {
             new Claim("userId", usuario.Id.ToString()),
-            new Claim("email", usuario.Email),
+                new Claim("email", usuario.Email),
             new Claim("matricula", usuario.Matricula),
-            new Claim("role", usuario.Role.ToString()), 
+            new Claim(ClaimTypes.Role, usuario.Role.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        if (usuario.Role == UserRole.Aluno && usuario.PerfilAluno != null)
+        var perfilId = usuario.Role switch
         {
-            claims.Add(new Claim("perfilId", usuario.PerfilAluno.Id.ToString()));
-        }
-        else if (usuario.Role == UserRole.Professor && usuario.PerfilProfessor != null)
+            UserRole.Aluno when usuario.PerfilAluno != null => usuario.PerfilAluno.Id.ToString(),
+            UserRole.Professor when usuario.PerfilProfessor != null => usuario.PerfilProfessor.Id.ToString(),
+            UserRole.Coordenador when usuario.PerfilProfessor != null => usuario.PerfilProfessor.Id.ToString(),
+            _ => null
+        };
+
+        if (perfilId != null)
         {
-            claims.Add(new Claim("perfilId", usuario.PerfilProfessor.Id.ToString()));
+            claims.Add(new Claim("perfilId", perfilId));
         }
 
         var token = new JwtSecurityToken(
@@ -59,7 +65,10 @@ public class TokenService : ITokenService
 
     public int GetExpirationInSeconds()
     {
-        var expirationMinutes = int.Parse(_configuration["Jwt:ExpirationMinutes"] ?? "1440");
+        if (!int.TryParse(_configuration["Jwt:ExpirationMinutes"], out var expirationMinutes))
+        {
+            expirationMinutes = 1440; // Default 24 horas
+        }
         return expirationMinutes * 60;
     }
 }
