@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.Avaliacoes;
 using PeiFeira.Communication.Requests.Avaliacoes;
@@ -7,6 +8,7 @@ namespace PeiFeira.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class AvaliacoesController : ControllerBase
 {
     private readonly AvaliacaoAppService _avaliacaoAppService;
@@ -17,6 +19,7 @@ public class AvaliacoesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Professor")]
     public async Task<ActionResult<AvaliacaoResponse>> Create([FromBody] CreateAvaliacaoRequest request)
     {
         var response = await _avaliacaoAppService.CriarAsync(request);
@@ -75,6 +78,7 @@ public class AvaliacoesController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Professor")]
     public async Task<ActionResult<AvaliacaoResponse>> Update(Guid id, [FromBody] UpdateAvaliacaoRequest request)
     {
         var response = await _avaliacaoAppService.AtualizarAsync(id, request);
@@ -82,6 +86,7 @@ public class AvaliacoesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Delete(Guid id)
     {
         var result = await _avaliacaoAppService.ExcluirAsync(id);

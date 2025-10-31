@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.Semestres;
 using PeiFeira.Communication.Requests.Semestres;
 using PeiFeira.Communication.Responses.Semestres;
@@ -7,6 +8,7 @@ namespace PeiFeira.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class SemestresController : ControllerBase
 {
     private readonly SemestreAppService _semestreAppService;
@@ -17,6 +19,7 @@ public class SemestresController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<SemestreResponse>> Create([FromBody] CreateSemestreRequest request)
     {
         var response = await _semestreAppService.CriarAsync(request);
@@ -59,6 +62,7 @@ public class SemestresController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<SemestreResponse>> Update(Guid id, [FromBody] UpdateSemestreRequest request)
     {
         var response = await _semestreAppService.AtualizarAsync(id, request);
@@ -66,6 +70,7 @@ public class SemestresController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Delete(Guid id)
     {
         var result = await _semestreAppService.ExcluirAsync(id);

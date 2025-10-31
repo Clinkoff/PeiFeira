@@ -1,3 +1,4 @@
+using PeiFeira.Communication.Requests.Auth;
 using PeiFeira.Communication.Requests.Usuario;
 
 namespace PeiFeira.Application.Services.Usuarios.Services;

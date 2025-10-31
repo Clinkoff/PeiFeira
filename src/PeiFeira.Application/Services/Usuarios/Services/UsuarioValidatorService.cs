@@ -1,4 +1,5 @@
 using PeiFeira.Application.Services;
+using PeiFeira.Communication.Requests.Auth;
 using PeiFeira.Communication.Requests.Usuario;
 using PeiFeira.Domain.Interfaces.Repositories;
 

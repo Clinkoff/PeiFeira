@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.Turmas;
 using PeiFeira.Communication.Requests.Turma;
@@ -7,6 +8,7 @@ namespace PeiFeira.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class TurmasController : ControllerBase
 {
     private readonly TurmaAppService _turmaAppService;
@@ -17,6 +19,7 @@ public class TurmasController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin,Professor")]
     public async Task<ActionResult<TurmaResponse>> Create([FromBody] CreateTurmaRequest request)
     {
         var response = await _turmaAppService.CriarAsync(request);
@@ -66,6 +69,7 @@ public class TurmasController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin,Professor")]
     public async Task<ActionResult<TurmaResponse>> Update(Guid id, [FromBody] UpdateTurmaRequest request)
     {
         var response = await _turmaAppService.AtualizarAsync(id, request);
@@ -73,6 +77,7 @@ public class TurmasController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Delete(Guid id)
     {
         var result = await _turmaAppService.ExcluirAsync(id);

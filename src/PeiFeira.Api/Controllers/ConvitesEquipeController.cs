@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.ConviteEquipe;
 using PeiFeira.Communication.Requests.ConviteEquipe;
@@ -7,6 +8,7 @@ namespace PeiFeira.Api.Controllers;
 
 [ApiController]
 [Route("api/convites-equipe")]
+[Authorize]
 public class ConvitesEquipeController : ControllerBase
 {
     private readonly ConviteEquipeAppService _conviteEquipeAppService;
@@ -17,6 +19,7 @@ public class ConvitesEquipeController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Aluno")]
     public async Task<ActionResult<ConviteEquipeResponse>> EnviarConvite([FromBody] CreateConviteEquipeRequest request)
     {
         var response = await _conviteEquipeAppService.EnviarConviteAsync(request);
@@ -24,6 +27,7 @@ public class ConvitesEquipeController : ControllerBase
     }
 
     [HttpPut("{id}/aceitar")]
+    [Authorize(Roles = "Aluno")]
     public async Task<ActionResult<ConviteEquipeResponse>> AceitarConvite(Guid id, [FromBody] RespondConviteRequest request)
     {
         var response = await _conviteEquipeAppService.AceitarConviteAsync(id, request.PerfilAlunoId);
@@ -31,6 +35,7 @@ public class ConvitesEquipeController : ControllerBase
     }
 
     [HttpPut("{id}/recusar")]
+    [Authorize(Roles = "Aluno")]
     public async Task<ActionResult<ConviteEquipeResponse>> RecusarConvite(Guid id, [FromBody] RespondConviteRequest request)
     {
         var response = await _conviteEquipeAppService.RecusarConviteAsync(id, request.PerfilAlunoId);
@@ -38,6 +43,7 @@ public class ConvitesEquipeController : ControllerBase
     }
 
     [HttpPut("{id}/cancelar")]
+    [Authorize(Roles = "Aluno")]
     public async Task<ActionResult<ConviteEquipeResponse>> CancelarConvite(Guid id, [FromBody] RespondConviteRequest request)
     {
         var response = await _conviteEquipeAppService.CancelarConviteAsync(id, request.PerfilAlunoId);

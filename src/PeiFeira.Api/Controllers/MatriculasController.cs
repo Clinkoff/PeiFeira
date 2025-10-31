@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.Matriculas;
 using PeiFeira.Communication.Requests.Matriculas;
 using PeiFeira.Communication.Responses.Matriculas;
@@ -7,6 +8,7 @@ namespace PeiFeira.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class MatriculasController : ControllerBase
 {
     private readonly MatriculaAppService _matriculaAppService;
@@ -16,6 +18,7 @@ public class MatriculasController : ControllerBase
         _matriculaAppService = matriculaAppService;
     }
     [HttpPost]
+    [Authorize(Roles = "Admin,Professor")]
     public async Task<ActionResult<MatriculaResponse>> MatricularAluno([FromBody] CreateMatriculaRequest request)
     {
         var response = await _matriculaAppService.MatricularAlunoAsync(request);
@@ -51,6 +54,7 @@ public class MatriculasController : ControllerBase
     }
 
     [HttpPut("transferir")]
+    [Authorize(Roles = "Admin,Professor")]
     public async Task<ActionResult> TransferirAluno([FromBody] TransferirAlunoRequest request)
     {
         var result = await _matriculaAppService.TransferirAlunoAsync(request.PerfilAlunoId, request.NovaTurmaId);
@@ -58,6 +62,7 @@ public class MatriculasController : ControllerBase
     }
 
     [HttpDelete("{matriculaId}")]
+    [Authorize(Roles = "Admin,Professor")]
     public async Task<ActionResult> Desmatricular(Guid matriculaId)
     {
         var result = await _matriculaAppService.DesmatricularAlunoAsync(matriculaId);

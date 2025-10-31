@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using PeiFeira.Api.Data;
 using PeiFeira.Api.Filters;
 using PeiFeira.Application.Services;
 using PeiFeira.Application.Services.Auth;
@@ -18,7 +19,6 @@ using PeiFeira.Application.Services.Turmas;
 using PeiFeira.Application.Services.Usuarios;
 using PeiFeira.Application.Services.Usuarios.Services;
 using PeiFeira.Application.Services.Usuarios.Services.PerfilCreation;
-using PeiFeira.Application.Validators.Auth;
 using PeiFeira.Domain.Interfaces.Auth;
 using PeiFeira.Domain.Interfaces.Repositories;
 using PeiFeira.Infrastructure.Data;
@@ -31,6 +31,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ExceptionFilter>();
+})
+.AddJsonOptions(options =>
+{
+    // Serializa enums como strings no JSON
+    options.JsonSerializerOptions.Converters.Add(
+        new System.Text.Json.Serialization.JsonStringEnumConverter());
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -48,10 +54,8 @@ builder.Services.AddDbContext<PeiFeiraDbContext>(options =>
 // Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-// FluentValidation - Registra AbstractValidator<T> automaticamente
+// FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<ValidationService>();
-
-// ValidationService (classe concreta)
 builder.Services.AddScoped<ValidationService>();
 
 // Services customizados
@@ -71,7 +75,6 @@ builder.Services.AddScoped<IConviteEquipeManager, ConviteEquipeManager>();
 builder.Services.AddScoped<IProjetoManager, ProjetoManager>();
 builder.Services.AddScoped<IAvaliacaoManager, AvaliacaoManager>();
 
-
 // AppServices
 builder.Services.AddScoped<UsuarioAppService>();
 builder.Services.AddScoped<DisciplinaPIAppService>();
@@ -89,12 +92,10 @@ builder.Services.AddScoped<AvaliacaoAppService>();
 builder.Services.AddScoped<IPerfilCreationStrategy, AlunoPerfilCreationStrategy>();
 builder.Services.AddScoped<IPerfilCreationStrategy, ProfessorPerfilCreationStrategy>();
 
-
-//Auth
+// Auth
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
-builder.Services.AddScoped<AuthAppService>();
 
 var jwtSecret = builder.Configuration["Jwt:Secret"]
     ?? throw new InvalidOperationException("Jwt:Secret não configurado");
@@ -117,11 +118,10 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtIssuer,
         ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
-        ClockSkew = TimeSpan.Zero // Remove delay padrão de 5min na expiração
+        ClockSkew = TimeSpan.Zero
     };
 });
 
-// ✅ CONFIGURAR AUTORIZAÇÃO COM POLICIES
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>
@@ -139,7 +139,6 @@ builder.Services.AddAuthorization(options =>
                 (c.Value == "Professor" || c.Value == "Admin"))));
 });
 
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -149,8 +148,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication(); // Ele valida o token primeiro.
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// ✅ SEED DO BANCO DE DADOS
+await DatabaseSeeder.SeedAsync(app.Services);
 
 app.Run();

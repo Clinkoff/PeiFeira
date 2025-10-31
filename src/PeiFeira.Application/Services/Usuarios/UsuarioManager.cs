@@ -1,6 +1,7 @@
 using PeiFeira.Application.Services.Usuarios.Services;
 using PeiFeira.Application.Services.Usuarios.Services.PerfilCreation;
 using PeiFeira.Communication.Enums;
+using PeiFeira.Communication.Requests.Auth;
 using PeiFeira.Communication.Requests.Usuario;
 using PeiFeira.Communication.Responses.Usuario;
 using PeiFeira.Domain.Entities.Usuarios;

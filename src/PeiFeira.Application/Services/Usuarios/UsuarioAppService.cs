@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using PeiFeira.Communication.Requests.Auth;
 using PeiFeira.Communication.Requests.Usuario;
 using PeiFeira.Communication.Responses.Usuario;
 

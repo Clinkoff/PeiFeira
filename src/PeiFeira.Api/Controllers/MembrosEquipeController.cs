@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.MembrosEquipes;
 using PeiFeira.Communication.Requests.MembroEquipe;
@@ -7,6 +8,7 @@ namespace PeiFeira.Api.Controllers;
 
 [ApiController]
 [Route("api/membros-equipe")]
+[Authorize]
 public class MembrosEquipeController : ControllerBase
 {
     private readonly MembroEquipeAppService _membroEquipeAppService;

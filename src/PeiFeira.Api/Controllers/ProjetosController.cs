@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.Projetos;
 using PeiFeira.Communication.Requests.Projetos;
@@ -7,6 +8,7 @@ namespace PeiFeira.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ProjetosController : ControllerBase
 {
     private readonly ProjetoAppService _projetoAppService;
@@ -17,6 +19,7 @@ public class ProjetosController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Aluno")]
     public async Task<ActionResult<ProjetoResponse>> Create([FromBody] CreateProjetoRequest request)
     {
         var response = await _projetoAppService.CriarAsync(request);
@@ -80,6 +83,7 @@ public class ProjetosController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Aluno,Professor")]
     public async Task<ActionResult<ProjetoResponse>> Update(Guid id, [FromBody] UpdateProjetoRequest request)
     {
         var response = await _projetoAppService.AtualizarAsync(id, request);
@@ -87,6 +91,7 @@ public class ProjetosController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Delete(Guid id)
     {
         var result = await _projetoAppService.ExcluirAsync(id);

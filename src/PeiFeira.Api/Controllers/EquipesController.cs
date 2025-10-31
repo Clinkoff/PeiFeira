@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.Equipes;
 using PeiFeira.Communication.Requests.Equipes;
@@ -7,6 +8,7 @@ namespace PeiFeira.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class EquipesController : ControllerBase
 {
     private readonly EquipeAppService _equipeAppService;
@@ -17,6 +19,7 @@ public class EquipesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Aluno")]
     public async Task<ActionResult<EquipeResponse>> Create([FromBody] CreateEquipeRequest request)
     {
         var response = await _equipeAppService.CriarAsync(request);
@@ -80,6 +83,7 @@ public class EquipesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Delete(Guid id)
     {
         var result = await _equipeAppService.ExcluirAsync(id);

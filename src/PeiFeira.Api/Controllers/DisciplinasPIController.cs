@@ -8,6 +8,7 @@ namespace PeiFeira.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class DisciplinasPIController : ControllerBase
 {
     private readonly DisciplinaPIAppService _disciplinaPIAppService;
@@ -18,7 +19,7 @@ public class DisciplinasPIController : ControllerBase
     }
 
     [HttpPost]
-    // [Authorize(Roles = "Professor,Coordenador")]
+    [Authorize(Roles = "Admin,Professor")]
     public async Task<ActionResult<DisciplinaPIResponse>> Create([FromBody] CreateDisciplinaPIRequest request)
     {
         var response = await _disciplinaPIAppService.CriarAsync(request);
@@ -80,7 +81,7 @@ public class DisciplinasPIController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    // [Authorize(Roles = "Professor,Coordenador")]
+    [Authorize(Roles = "Admin,Professor")]
     public async Task<ActionResult<DisciplinaPIResponse>> Update(Guid id, [FromBody] UpdateDisciplinaPIRequest request)
     {
         var response = await _disciplinaPIAppService.AtualizarAsync(id, request);
@@ -89,7 +90,7 @@ public class DisciplinasPIController : ControllerBase
 
 
     [HttpDelete("{id}")]
-    // [Authorize(Roles = "Professor,Coordenador")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Delete(Guid id)
     {
         var result = await _disciplinaPIAppService.ExcluirAsync(id);
@@ -97,7 +98,7 @@ public class DisciplinasPIController : ControllerBase
     }
 
     [HttpPost("{disciplinaPIId}/turmas/{turmaId}")]
-    // [Authorize(Roles = "Professor,Coordenador")]
+    [Authorize(Roles = "Admin,Professor")]
     public async Task<ActionResult> AssociarTurma(Guid disciplinaPIId, Guid turmaId)
     {
         var result = await _disciplinaPIAppService.AssociarTurmaAsync(disciplinaPIId, turmaId);
@@ -105,7 +106,7 @@ public class DisciplinasPIController : ControllerBase
     }
 
     [HttpDelete("{disciplinaPIId}/turmas/{turmaId}")]
-    // [Authorize(Roles = "Professor,Coordenador")]
+    [Authorize(Roles = "Admin,Professor")]
     public async Task<ActionResult> RemoverTurma(Guid disciplinaPIId, Guid turmaId)
     {
         var result = await _disciplinaPIAppService.RemoverTurmaAsync(disciplinaPIId, turmaId);

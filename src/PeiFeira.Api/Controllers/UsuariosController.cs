@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.Usuarios;
+using PeiFeira.Communication.Requests.Auth;
 using PeiFeira.Communication.Requests.Usuario;
 using PeiFeira.Communication.Responses.Usuario;
 
@@ -7,6 +9,7 @@ namespace PeiFeira.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class UsuariosController : ControllerBase
 {
     private readonly UsuarioAppService _usuarioAppService;
@@ -17,6 +20,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<UsuarioResponse>> Create([FromBody] CreateUsuarioRequest request)
     {
         var response = await _usuarioAppService.CriarAsync(request);
@@ -45,6 +49,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin,Professor")]
     public async Task<ActionResult<IEnumerable<UsuarioResponse>>> GetAll()
     {
         var response = await _usuarioAppService.ListarTodosAsync();
@@ -52,6 +57,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpGet("ativos")]
+    [Authorize(Roles = "Admin,Professor")]
     public async Task<ActionResult<IEnumerable<UsuarioResponse>>> GetActive()
     {
         var response = await _usuarioAppService.ListarAtivosAsync();
@@ -73,6 +79,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<UsuarioResponse>> Update(Guid id, [FromBody] UpdateUsuarioRequest request)
     {
         var response = await _usuarioAppService.AtualizarAsync(id, request);
@@ -80,17 +87,11 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Delete(Guid id)
     {
         var result = await _usuarioAppService.ExcluirAsync(id);
         return result ? NoContent() : NotFound();
-    }
-
-    [HttpPost("login")]
-    public async Task<ActionResult<UsuarioResponse>> Login([FromBody] LoginRequest request)
-    {
-        var response = await _usuarioAppService.LoginAsync(request);
-        return response != null ? Ok(response) : Unauthorized("Credenciais inválidas");
     }
 
     [HttpPut("{id}/mudar-senha")]
@@ -101,6 +102,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpGet("exists/matricula/{matricula}")]
+    [AllowAnonymous]
     public async Task<ActionResult<bool>> ExistsByMatricula(string matricula)
     {
         var exists = await _usuarioAppService.ExisteMatriculaAsync(matricula);
@@ -108,6 +110,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpGet("exists/email/{email}")]
+    [AllowAnonymous]
     public async Task<ActionResult<bool>> ExistsByEmail(string email)
     {
         var exists = await _usuarioAppService.ExisteEmailAsync(email);

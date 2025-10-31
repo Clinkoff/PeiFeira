@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.Auth;
 using PeiFeira.Communication.Requests.Auth;
 using PeiFeira.Communication.Responses.Auth;
-using System.Security.Claims;
 
 namespace PeiFeira.Api.Controllers;
 
