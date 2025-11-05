@@ -2,6 +2,7 @@ using FluentValidation;
 using PeiFeira.Application.Validators.Turma;
 using PeiFeira.Communication.Requests.Turma;
 using PeiFeira.Communication.Responses.Turmas;
+using PeiFeira.Communication.Responses.Usuarios;
 using PeiFeira.Domain.Entities.Turmas;
 using PeiFeira.Domain.Interfaces.Repositories;
 using PeiFeira.Exception.ExeceptionsBases;
@@ -104,6 +105,30 @@ public class TurmaManager : ITurmaManager
     {
         var turmas = await _unitOfWork.Turmas.GetAllAsync();
         return turmas.Select(MapToResponse);
+    }
+    public async Task<IEnumerable<UsuarioSimplificadoResponse>> GetAlunosDisponiveisAsync(Guid turmaId)
+    {
+        // Buscar todos os usuários com perfil de aluno
+        var alunos = await _unitOfWork.Usuarios.GetAlunosAtivosAsync(); // vamos criar esse método no repositório
+
+        // Buscar alunos já matriculados nessa turma
+        var matriculas = await _unitOfWork.AlunoTurmas.GetByTurmaIdAsync(turmaId);
+        var idsMatriculados = matriculas.Select(m => m.PerfilAlunoId).ToHashSet();
+
+        // Filtrar apenas alunos ainda não matriculados
+        var disponiveis = alunos
+            .Where(a => a.PerfilAluno != null && !idsMatriculados.Contains(a.PerfilAluno.Id))
+            .ToList();
+
+        return disponiveis.Select(a => new UsuarioSimplificadoResponse
+        {
+            Id = a.Id,
+            Nome = a.Nome,
+            Matricula = a.Matricula,
+            Email = a.Email,
+            Curso = a.PerfilAluno?.Curso,
+            Turno = a.PerfilAluno?.Turno
+        });
     }
 
     public async Task<IEnumerable<TurmaResponse>> GetActiveAsync()

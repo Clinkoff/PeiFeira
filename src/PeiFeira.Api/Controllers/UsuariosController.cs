@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.Usuarios;
-using PeiFeira.Communication.Requests.Auth;
 using PeiFeira.Communication.Requests.Usuario;
 using PeiFeira.Communication.Responses.Usuario;
 
@@ -116,4 +115,16 @@ public class UsuariosController : ControllerBase
         var exists = await _usuarioAppService.ExisteEmailAsync(email);
         return Ok(exists);
     }
+
+    [HttpGet("{id}/alunos-disponiveis")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<IEnumerable<UsuarioResponse>>> GetAlunosDisponiveis(Guid id)
+    {
+        var response = await _usuarioAppService.GetAlunosDisponiveisAsync(id);
+        return Ok(response);
+    }
+
+
+
+
 }

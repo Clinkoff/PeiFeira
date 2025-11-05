@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PeiFeira.Application.Services.Turmas;
 using PeiFeira.Communication.Requests.Turma;
 using PeiFeira.Communication.Responses.Turmas;
+using PeiFeira.Communication.Responses.Usuarios;
 
 namespace PeiFeira.Api.Controllers;
 
@@ -83,4 +84,13 @@ public class TurmasController : ControllerBase
         var result = await _turmaAppService.ExcluirAsync(id);
         return result ? NoContent() : NotFound();
     }
+
+    [HttpGet("{turmaId}/alunos-disponiveis")]
+    [Authorize(Roles = "Admin,Professor")]
+    public async Task<ActionResult<IEnumerable<UsuarioSimplificadoResponse>>> GetAlunosDisponiveis(Guid turmaId)
+    {
+        var alunos = await _turmaAppService.GetAlunosDisponiveisAsync(turmaId);
+        return Ok(alunos);
+    }
+
 }

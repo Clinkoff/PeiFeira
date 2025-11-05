@@ -43,4 +43,19 @@ public class AuthController : ControllerBase
         var userInfo = await _authManager.GetUserInfoAsync(userId);
         return Ok(userInfo);
     }
+
+    [HttpPost("logout")]
+    [Authorize]
+    public ActionResult Logout()
+    {
+        var userId = User.FindFirst("userId")?.Value;
+        var matricula = User.FindFirst("matricula")?.Value;
+        var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+
+        _logger.LogInformation(
+            "Logout realizado - UserId: {UserId}, Matrícula: {Matricula}, Role: {Role}",
+            userId, matricula, role);
+
+        return Ok(new { message = "Logout realizado com sucesso" });
+    }
 }

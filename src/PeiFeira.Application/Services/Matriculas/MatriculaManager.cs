@@ -30,9 +30,15 @@ public class MatriculaManager : IMatriculaManager
         await _createValidator.ValidateAndThrowAsync(request);
         await new MatriculaBusinessValidator(_unitOfWork).ValidateAndThrowAsync(request);
 
+        var perfis = await _unitOfWork.PerfisAluno.GetAllAsync();
+        var perfilAluno = perfis.FirstOrDefault(p => p.UsuarioId == request.UsuarioId);
+
+        if (perfilAluno == null)
+            throw new NotFoundException("PerfilAluno", request.UsuarioId);
+
         var matriculaId = await _transactionService.CreateMatriculaAsync(
             request.TurmaId,
-            request.PerfilAlunoId
+            perfilAluno.Id
         );
 
         var matriculaCompleta = await _unitOfWork.AlunoTurmas.GetByIdAsync(matriculaId);
@@ -59,7 +65,7 @@ public class MatriculaManager : IMatriculaManager
         await MatricularAlunoAsync(new CreateMatriculaRequest
         {
             TurmaId = novaTurmaId,
-            PerfilAlunoId = perfilAlunoId
+            UsuarioId = perfilAlunoId
         });
 
         return true;

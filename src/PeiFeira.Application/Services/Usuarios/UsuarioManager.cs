@@ -68,9 +68,6 @@ public class UsuarioManager : IUsuarioManager
         usuario.Nome = request.Nome;
         usuario.Email = request.Email;
 
-        if (request.Role.HasValue)
-            usuario.Role = (UserRole)request.Role.Value;
-
         var updated = await _unitOfWork.Usuarios.UpdateAsync(usuario);
         await _unitOfWork.SaveChangesAsync();
 
@@ -168,7 +165,19 @@ public class UsuarioManager : IUsuarioManager
     {
         return await _unitOfWork.Usuarios.ExistsByEmailAsync(email);
     }
+    public async Task<IEnumerable<UsuarioResponse>> GetAlunosAtivosAsync()
+    {
+        // Busca todos os usuários que possuem perfil de aluno e estão ativos
+        var usuarios = await _unitOfWork.Usuarios.GetAlunosAtivosAsync();
 
+        return usuarios.Select(MapToResponse);
+    }
+
+    public async Task<IEnumerable<UsuarioResponse>> GetAlunosDisponiveisAsync(Guid turmaId)
+    {
+        var alunos = await _unitOfWork.Usuarios.GetAlunosDisponiveisAsync(turmaId);
+        return alunos.Select(MapToResponse);
+    }
     private static UsuarioResponse MapToResponse(Usuario usuario)
     {
         return new UsuarioResponse

@@ -7,7 +7,7 @@ public class CreateMatriculaRequestValidator : BaseValidator<CreateMatriculaRequ
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateMatriculaRequestValidator(IUnitOfWork unitOfWork) 
+    public CreateMatriculaRequestValidator(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
 
@@ -15,9 +15,9 @@ public class CreateMatriculaRequestValidator : BaseValidator<CreateMatriculaRequ
             .NotEmpty().WithMessage("TurmaId é obrigatório")
             .MustAsync(BeValidTurmaAsync).WithMessage("Turma não encontrada");
 
-        RuleFor(m => m.PerfilAlunoId)
-            .NotEmpty().WithMessage("PerfilAlunoId é obrigatório")
-            .MustAsync(BeValidAlunoAsync).WithMessage("Aluno não encontrado");
+        RuleFor(m => m.UsuarioId)
+            .NotEmpty().WithMessage("UsuarioId é obrigatório")
+            .MustAsync(BeValidUsuarioAsync).WithMessage("Usuário não encontrado ou sem perfil de aluno.");
     }
 
     private async Task<bool> BeValidTurmaAsync(Guid turmaId, CancellationToken cancellation)
@@ -26,9 +26,13 @@ public class CreateMatriculaRequestValidator : BaseValidator<CreateMatriculaRequ
         return turma != null;
     }
 
-    private async Task<bool> BeValidAlunoAsync(Guid perfilAlunoId, CancellationToken cancellation)
+    private async Task<bool> BeValidUsuarioAsync(Guid usuarioId, CancellationToken cancellation)
     {
-        var aluno = await _unitOfWork.PerfisAluno.GetByIdAsync(perfilAlunoId);
-        return aluno != null;
+        var usuario = await _unitOfWork.Usuarios.GetByIdAsync(usuarioId);
+        if (usuario == null) return false;
+
+        var perfisAluno = await _unitOfWork.PerfisAluno.GetAllAsync();
+        var perfilAluno = perfisAluno.FirstOrDefault(p => p.UsuarioId == usuarioId);
+        return perfilAluno != null;
     }
 }

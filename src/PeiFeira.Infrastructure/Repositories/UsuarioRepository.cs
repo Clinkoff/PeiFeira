@@ -62,4 +62,24 @@ public class UsuarioRepository : BaseRepository<Usuario>, IUsuarioRepository
             .Include(u => u.PerfilProfessor)
             .FirstOrDefaultAsync(u => u.Matricula == matricula);
     }
+
+    public async Task<IEnumerable<Usuario>> GetAlunosAtivosAsync()
+    {
+        return await _context.Usuarios
+            .Include(u => u.PerfilAluno) // garante que venha com PerfilAluno
+            .Where(u => u.Role == UserRole.Aluno && u.IsActive && u.PerfilAluno != null)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Usuario>> GetAlunosDisponiveisAsync(Guid turmaId)
+    {
+        return await _context.Usuarios
+            .Include(u => u.PerfilAluno)
+            .Where(u => u.Role == UserRole.Aluno && u.PerfilAluno != null)
+            .Where(u => !_context.AlunosTurma
+                .Any(at => at.PerfilAlunoId == u.PerfilAluno.Id && at.TurmaId == turmaId && at.IsAtual))
+            .ToListAsync();
+    }
+
+
 }

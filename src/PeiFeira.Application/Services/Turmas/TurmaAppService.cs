@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using PeiFeira.Communication.Requests.Turma;
 using PeiFeira.Communication.Responses.Turmas;
+using PeiFeira.Communication.Responses.Usuarios;
 
 namespace PeiFeira.Application.Services.Turmas;
 
@@ -78,5 +79,11 @@ public class TurmaAppService
     {
         _logger.LogInformation("Buscando turma por código: {Codigo}", codigo);
         return await _turmaManager.GetByCodigoAsync(codigo);
+    }
+
+    public async Task<IEnumerable<UsuarioSimplificadoResponse>> GetAlunosDisponiveisAsync(Guid turmaId)
+    {
+        _logger.LogInformation("Buscando aluno por turmaId: {turmaId}", turmaId);
+        return await _turmaManager.GetAlunosDisponiveisAsync(turmaId);
     }
 }

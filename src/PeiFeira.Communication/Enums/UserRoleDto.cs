@@ -1,5 +1,8 @@
-﻿namespace PeiFeira.Communication.Enums;
+﻿using System.Text.Json.Serialization;
 
+namespace PeiFeira.Communication.Enums;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum UserRoleDto
 {
     Admin = 0,

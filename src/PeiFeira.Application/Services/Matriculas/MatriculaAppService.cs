@@ -19,7 +19,7 @@ public class MatriculaAppService
 
     public Task<MatriculaResponse> MatricularAlunoAsync(CreateMatriculaRequest request)
     {
-        _logger.LogInformation("Iniciando matrícula do aluno. PerfilAlunoId: {PerfilAlunoId}, TurmaId: {TurmaId}", request.PerfilAlunoId, request.TurmaId);
+        _logger.LogInformation("Iniciando matrícula do aluno. PerfilAlunoId: {PerfilAlunoId}, TurmaId: {TurmaId}", request.UsuarioId, request.TurmaId);
         return _matriculaManager.MatricularAlunoAsync(request);
     }
 

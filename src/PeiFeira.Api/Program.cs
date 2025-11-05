@@ -139,7 +139,19 @@ builder.Services.AddAuthorization(options =>
                 (c.Value == "Professor" || c.Value == "Admin"))));
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
+app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
 {

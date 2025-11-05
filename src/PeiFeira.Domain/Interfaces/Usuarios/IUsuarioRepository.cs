@@ -13,4 +13,7 @@ public interface IUsuarioRepository : IBaseRepository<Usuario>
     Task<IEnumerable<Usuario>> GetByRoleAsync(UserRole role);
     Task<IEnumerable<Usuario>> GetProfessoresAsync();              // Buscar só professores
     Task<IEnumerable<Usuario>> GetAlunosAsync();                   // Buscar só alunos
+    Task<IEnumerable<Usuario>> GetAlunosAtivosAsync();
+    Task<IEnumerable<Usuario>> GetAlunosDisponiveisAsync(Guid turmaId);
+
 }

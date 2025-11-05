@@ -14,11 +14,11 @@ public class AlunoTurmaRepository : BaseRepository<AlunoTurma>, IAlunoTurmaRepos
 
     public async Task<IEnumerable<AlunoTurma>> GetByTurmaIdAsync(Guid turmaId)
     {
-        return await _dbSet
-            .Include(at => at.Turma)
-            .Include(at => at.PerfilAluno)
+        return await _context.AlunosTurma
+            .Include(a => a.PerfilAluno)
                 .ThenInclude(p => p.Usuario)
-            .Where(at => at.TurmaId == turmaId && at.IsAtual)
+            .Include(a => a.Turma)
+            .Where(a => a.TurmaId == turmaId && a.IsActive)
             .ToListAsync();
     }
 

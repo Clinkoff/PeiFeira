@@ -19,7 +19,7 @@ public class SemestresController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")] 
     public async Task<ActionResult<SemestreResponse>> Create([FromBody] CreateSemestreRequest request)
     {
         var response = await _semestreAppService.CriarAsync(request);

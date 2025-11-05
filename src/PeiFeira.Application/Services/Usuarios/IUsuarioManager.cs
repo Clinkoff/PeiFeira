@@ -1,6 +1,7 @@
 using PeiFeira.Communication.Requests.Auth;
 using PeiFeira.Communication.Requests.Usuario;
 using PeiFeira.Communication.Responses.Usuario;
+using PeiFeira.Domain.Entities.Usuarios;
 
 namespace PeiFeira.Application.Services.Usuarios;
 
@@ -20,4 +21,7 @@ public interface IUsuarioManager
     Task<bool> MudarSenhaAsync(Guid id, MudarSenhaRequest request);
     Task<bool> ExistsByMatriculaAsync(string matricula);
     Task<bool> ExistsByEmailAsync(string email);
+    Task<IEnumerable<UsuarioResponse>> GetAlunosAtivosAsync();
+    Task<IEnumerable<UsuarioResponse>> GetAlunosDisponiveisAsync(Guid turmaId);
+
 }

@@ -119,4 +119,9 @@ public class UsuarioAppService
     {
         return await _usuarioManager.ExistsByEmailAsync(email);
     }
+
+    public async Task<IEnumerable<UsuarioResponse>> GetAlunosDisponiveisAsync(Guid turmaId)
+    {
+        return await _usuarioManager.GetAlunosDisponiveisAsync(turmaId);
+    }
 }

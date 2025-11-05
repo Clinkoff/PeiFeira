@@ -1,5 +1,6 @@
 using PeiFeira.Communication.Requests.Turma;
 using PeiFeira.Communication.Responses.Turmas;
+using PeiFeira.Communication.Responses.Usuarios;
 
 namespace PeiFeira.Application.Services.Turmas;
 
@@ -14,4 +15,6 @@ public interface ITurmaManager
     Task<IEnumerable<TurmaResponse>> GetBySemestreIdAsync(Guid semestreId);
     Task<IEnumerable<TurmaResponse>> GetByCursoAsync(string curso);
     Task<TurmaResponse?> GetByCodigoAsync(string codigo);
+    Task<IEnumerable<UsuarioSimplificadoResponse>> GetAlunosDisponiveisAsync(Guid turmaId);
+
 }

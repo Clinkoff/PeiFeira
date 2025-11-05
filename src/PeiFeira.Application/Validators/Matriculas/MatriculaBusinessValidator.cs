@@ -21,7 +21,7 @@ public class MatriculaBusinessValidator : AbstractValidator<CreateMatriculaReque
     private async Task<bool> NotMatriculadoNaTurmaAsync(CreateMatriculaRequest request, CancellationToken cancellation)
     {
         return !await _unitOfWork.AlunoTurmas.ExistsMatriculaAtivaAsync(
-            request.PerfilAlunoId,
+            request.UsuarioId,
             request.TurmaId
         );
     }

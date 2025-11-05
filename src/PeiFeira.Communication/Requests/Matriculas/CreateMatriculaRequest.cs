@@ -2,6 +2,6 @@
 
 public class CreateMatriculaRequest
 {
-    public Guid PerfilAlunoId { get; set; }
     public Guid TurmaId { get; set; }
+    public Guid UsuarioId { get; set; }
 }

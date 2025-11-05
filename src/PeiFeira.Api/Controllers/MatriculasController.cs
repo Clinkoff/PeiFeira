@@ -17,6 +17,7 @@ public class MatriculasController : ControllerBase
     {
         _matriculaAppService = matriculaAppService;
     }
+
     [HttpPost]
     [Authorize(Roles = "Admin,Professor")]
     public async Task<ActionResult<MatriculaResponse>> MatricularAluno([FromBody] CreateMatriculaRequest request)
