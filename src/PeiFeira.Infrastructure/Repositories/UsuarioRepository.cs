@@ -38,13 +38,19 @@ public class UsuarioRepository : BaseRepository<Usuario>, IUsuarioRepository
 
     public async Task<IEnumerable<Usuario>> GetProfessoresAsync()
     {
-        return await _dbSet.Where(u => u.Role == UserRole.Professor).ToListAsync();
+        return await _dbSet
+            .Include(u => u.PerfilProfessor)
+            .Where(u => u.Role == UserRole.Professor)
+            .ToListAsync();
     }
 
 
     public async Task<IEnumerable<Usuario>> GetAlunosAsync()
     {
-        return await _dbSet.Where(u => u.Role == UserRole.Aluno).ToListAsync();
+        return await _dbSet
+            .Include(u => u.PerfilAluno)
+            .Where(u => u.Role == UserRole.Aluno)
+            .ToListAsync();
     }
 
     public async Task<Usuario?> GetByIdWithPerfilAsync(Guid id)

@@ -105,7 +105,7 @@ namespace PeiFeira.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_Avaliacao_Equipe_Avaliador_Unique");
 
-                    b.ToTable("Avaliacao");
+                    b.ToTable("Avaliacao", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.DisciplinasPI.DisciplinaPI", b =>
@@ -167,7 +167,7 @@ namespace PeiFeira.Infrastructure.Migrations
 
                     b.HasIndex("SemestreId");
 
-                    b.ToTable("DisciplinaPI");
+                    b.ToTable("DisciplinaPI", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.DisciplinasPI.DisciplinaPITurma", b =>
@@ -204,7 +204,7 @@ namespace PeiFeira.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_DisciplinaPITurma_Disciplina_Turma_Unique");
 
-                    b.ToTable("DisciplinaPITurma");
+                    b.ToTable("DisciplinaPITurma", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.Equipes.ConviteEquipe", b =>
@@ -260,7 +260,7 @@ namespace PeiFeira.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_ConviteEquipe_Equipe_Convidado_Unique");
 
-                    b.ToTable("ConviteEquipe");
+                    b.ToTable("ConviteEquipe", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.Equipes.Equipe", b =>
@@ -307,7 +307,7 @@ namespace PeiFeira.Infrastructure.Migrations
 
                     b.HasIndex("LiderPerfilAlunoId");
 
-                    b.ToTable("Equipe");
+                    b.ToTable("Equipe", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.Equipes.MembroEquipe", b =>
@@ -356,7 +356,7 @@ namespace PeiFeira.Infrastructure.Migrations
                     b.HasIndex("PerfilAlunoId", "EquipeId", "IsActive")
                         .HasDatabaseName("IX_MembroEquipe_PerfilAluno_Equipe_Active");
 
-                    b.ToTable("MembroEquipe");
+                    b.ToTable("MembroEquipe", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.Projetos.Projeto", b =>
@@ -444,7 +444,7 @@ namespace PeiFeira.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_Projeto_Disciplina_Equipe_Unique");
 
-                    b.ToTable("Projeto");
+                    b.ToTable("Projeto", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.Semestres.Semestre", b =>
@@ -489,7 +489,7 @@ namespace PeiFeira.Infrastructure.Migrations
                     b.HasIndex("Ano", "Periodo")
                         .IsUnique();
 
-                    b.ToTable("Semestre");
+                    b.ToTable("Semestre", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.Turmas.AlunoTurma", b =>
@@ -530,7 +530,7 @@ namespace PeiFeira.Infrastructure.Migrations
 
                     b.HasIndex("PerfilAlunoId", "TurmaId", "IsAtual");
 
-                    b.ToTable("AlunosTurma");
+                    b.ToTable("AlunosTurma", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.Turmas.Turma", b =>
@@ -584,7 +584,7 @@ namespace PeiFeira.Infrastructure.Migrations
 
                     b.HasIndex("SemestreId");
 
-                    b.ToTable("Turma");
+                    b.ToTable("Turma", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.Usuarios.PerfilAluno", b =>
@@ -623,7 +623,7 @@ namespace PeiFeira.Infrastructure.Migrations
                     b.HasIndex("UsuarioId")
                         .IsUnique();
 
-                    b.ToTable("PerfilAluno");
+                    b.ToTable("PerfilAluno", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.Usuarios.PerfilProfessor", b =>
@@ -666,7 +666,7 @@ namespace PeiFeira.Infrastructure.Migrations
                     b.HasIndex("UsuarioId")
                         .IsUnique();
 
-                    b.ToTable("PerfilProfessor");
+                    b.ToTable("PerfilProfessor", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.Usuarios.Usuario", b =>
@@ -720,7 +720,7 @@ namespace PeiFeira.Infrastructure.Migrations
                     b.HasIndex("Matricula")
                         .IsUnique();
 
-                    b.ToTable("Usuario");
+                    b.ToTable("Usuario", (string)null);
                 });
 
             modelBuilder.Entity("PeiFeira.Domain.Entities.Avaliacoes.Avaliacao", b =>
