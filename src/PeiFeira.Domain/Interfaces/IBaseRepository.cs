@@ -1,4 +1,5 @@
 ﻿using PeiFeira.Domain.Bases;
+using System.Linq.Expressions;
 
 namespace PeiFeira.Domain.Interfaces;
 
@@ -17,6 +18,6 @@ public interface IBaseRepository<T> where T : class, IBaseEntity
     Task<bool> DeleteAsync(Guid id);                   // Deletar fisicamente
     Task<bool> SoftDeleteAsync(Guid id);               // Deletar logicamente (IsActive = false)
 
-    Task<int> CountAsync();                            // Contar todos
-    Task<int> CountActiveAsync();                      // Contar só ativos
+    Task<int> CountAsync();
+    Task<int> CountAsync(Expression<Func<T, bool>> predicate);
 }

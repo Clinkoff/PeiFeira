@@ -38,4 +38,5 @@ public class TurmaRepository : BaseRepository<Turma>, ITurma
             .Where(t => t.Curso != null && t.Curso.Contains(curso))
             .ToListAsync();
     }
+
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PeiFeira.Domain.Bases;
 using PeiFeira.Domain.Interfaces;
 using PeiFeira.Infrastructure.Data;
+using System.Linq.Expressions;
 
 namespace PeiFeira.Infrastructure.Repositories;
 
@@ -76,8 +77,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         return await _dbSet.CountAsync();
     }
 
-    public async Task<int> CountActiveAsync()
+    public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
     {
-        return await _dbSet.CountAsync(e => e.IsActive);
+        return await _dbSet.CountAsync(predicate);
     }
 }

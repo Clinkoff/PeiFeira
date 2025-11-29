@@ -8,6 +8,7 @@ using PeiFeira.Application.Services;
 using PeiFeira.Application.Services.Auth;
 using PeiFeira.Application.Services.Avaliacoes;
 using PeiFeira.Application.Services.ConviteEquipe;
+using PeiFeira.Application.Services.Dashboard;
 using PeiFeira.Application.Services.DisciplinasPI;
 using PeiFeira.Application.Services.Equipes;
 using PeiFeira.Application.Services.Matriculas;
@@ -74,6 +75,7 @@ builder.Services.AddScoped<IMembroEquipeManager, MembroEquipeManager>();
 builder.Services.AddScoped<IConviteEquipeManager, ConviteEquipeManager>();
 builder.Services.AddScoped<IProjetoManager, ProjetoManager>();
 builder.Services.AddScoped<IAvaliacaoManager, AvaliacaoManager>();
+builder.Services.AddScoped<IDashboardManager, DashboardManager>(); 
 
 // AppServices
 builder.Services.AddScoped<UsuarioAppService>();
