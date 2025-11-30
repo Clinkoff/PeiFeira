@@ -1,4 +1,6 @@
-﻿namespace PeiFeira.Communication.Responses.Auth;
+﻿using PeiFeira.Communication.Responses.Usuario;
+
+namespace PeiFeira.Communication.Responses.Auth;
 
 public class UserInfo
 {
@@ -6,6 +8,8 @@ public class UserInfo
     public string Nome { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Matricula { get; set; } = string.Empty;
-    public string Tipo { get; set; } = string.Empty; 
-    public Guid? PerfilId { get; set; } // PerfilAlunoId ou PerfilProfessorId ou outros Perfis que add
+    public string Role { get; set; } = string.Empty; // Mudei de 'Tipo' para 'Role' pra bater com seu front
+
+    public PerfilProfessorResponse? PerfilProfessor { get; set; }
+    public PerfilAlunoResponse? PerfilAluno { get; set; }
 }

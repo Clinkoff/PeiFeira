@@ -2,6 +2,7 @@
 using PeiFeira.Application.Validators.Auth;
 using PeiFeira.Communication.Requests.Auth;
 using PeiFeira.Communication.Responses.Auth;
+using PeiFeira.Communication.Responses.Usuario;
 using PeiFeira.Domain.Entities.Usuarios;
 using PeiFeira.Domain.Interfaces.Auth;
 using PeiFeira.Domain.Interfaces.Repositories;
@@ -28,7 +29,7 @@ public class AuthManager : IAuthManager
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<LoginResponse> LoginAsync(LoginRequest request)
+    public async Task<Communication.Responses.Auth.LoginResponse> LoginAsync(LoginRequest request)
     {
         await _loginValidator.ValidateAndThrowAsync(request);
 
@@ -56,7 +57,7 @@ public class AuthManager : IAuthManager
         var expirationSeconds = _tokenService.GetExpirationInSeconds();
 
         // 6. Montar resposta
-        return new LoginResponse
+        return new Communication.Responses.Auth.LoginResponse
         {
             Token = token,
             ExpiresIn = expirationSeconds,
@@ -76,18 +77,32 @@ public class AuthManager : IAuthManager
         return MapToUserInfo(usuario);
     }
 
-    private static UserInfo MapToUserInfo(Usuario usuario)
+    private UserInfo MapToUserInfo(Usuario usuario)
+{
+    return new UserInfo
     {
-        return new UserInfo
+        Id = usuario.Id,
+        Nome = usuario.Nome,
+        Email = usuario.Email,
+        Matricula = usuario.Matricula,
+        Role = usuario.Role.ToString(), 
+        
+        PerfilProfessor = usuario.PerfilProfessor != null ? new PerfilProfessorResponse
         {
-            Id = usuario.Id,
-            Nome = usuario.Nome,
-            Email = usuario.Email,
-            Matricula = usuario.Matricula,
-            Tipo = usuario.Role.ToString(),
-            PerfilId = GetPerfilId(usuario)
-        };
-    }
+            Id = usuario.PerfilProfessor.Id,
+            Departamento = usuario.PerfilProfessor.Departamento,
+            Titulacao = usuario.PerfilProfessor.Titulacao,
+            AreaEspecializacao = usuario.PerfilProfessor.AreaEspecializacao
+        } : null,
+
+        PerfilAluno = usuario.PerfilAluno != null ? new PerfilAlunoResponse
+        {
+            Id = usuario.PerfilAluno.Id,
+            Curso = usuario.PerfilAluno.Curso,
+            Turno = usuario.PerfilAluno.Turno
+        } : null
+    };
+}
 
     private static Guid? GetPerfilId(Usuario usuario)
     {
