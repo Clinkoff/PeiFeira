@@ -15,4 +15,5 @@ public interface IEquipeManager
     Task<EquipeResponse?> GetByLiderIdAsync(Guid liderId);
     Task<EquipeResponse?> GetByCodigoConviteAsync(string codigo);
     Task<EquipeResponse> RegenerarCodigoConviteAsync(Guid id);
+    Task<IEnumerable<EquipeResponse>> ListarComProjetoAsync();
 }

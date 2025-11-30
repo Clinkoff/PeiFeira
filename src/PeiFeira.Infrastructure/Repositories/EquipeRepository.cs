@@ -102,4 +102,16 @@ public class EquipeRepository : BaseRepository<Equipe>, IEquipeRepository
     {
         return await _dbSet.AnyAsync(e => e.CodigoConvite == codigo && e.IsActive);
     }
+
+    // Adicione dentro da classe EquipeRepository
+    public async Task<IEnumerable<Equipe>> GetComProjetoAsync()
+    {
+        return await _dbSet
+            .Include(e => e.Lider)
+                .ThenInclude(l => l.Usuario) // Precisamos do nome do líder para o Card
+            .Include(e => e.Membros) // Opcional, se precisar contar membros
+            .Include(e => e.Projeto) 
+            .Where(e => e.IsActive && e.Projeto != null) // O Pulo do Gato: Filtra só quem tem projeto
+            .ToListAsync();
+    }
 }

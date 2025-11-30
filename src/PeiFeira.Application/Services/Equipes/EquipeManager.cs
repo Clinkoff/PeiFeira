@@ -163,7 +163,12 @@ public class EquipeManager : IEquipeManager
             AlteradoEm = equipe.AlteradoEm
         };
     }
+    public async Task<IEnumerable<EquipeResponse>> ListarComProjetoAsync()
+    {
+        var equipes = await _unitOfWork.Equipes.GetComProjetoAsync();
 
+        return equipes.Select(MapToResponse);
+    }
     private static EquipeDetailResponse MapToDetailResponse(Equipe equipe)
     {
         return new EquipeDetailResponse

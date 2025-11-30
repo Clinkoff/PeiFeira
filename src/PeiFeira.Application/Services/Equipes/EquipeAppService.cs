@@ -74,6 +74,12 @@ public class EquipeAppService
         return await _equipeManager.GetByLiderIdAsync(liderId);
     }
 
+
+    public async Task<IEnumerable<EquipeResponse>> ListarComProjetoAsync()
+    {
+        return await _equipeManager.ListarComProjetoAsync();
+    }
+
     public async Task<EquipeResponse?> BuscarPorCodigoAsync(string codigo)
     {
         _logger.LogInformation("Buscando equipe por código de convite: {Codigo}", codigo);

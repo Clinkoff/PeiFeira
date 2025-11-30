@@ -82,6 +82,13 @@ public class EquipesController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("com-projeto")]
+    public async Task<ActionResult<IEnumerable<EquipeResponse>>> GetComProjeto()
+    {
+        var response = await _equipeAppService.ListarComProjetoAsync();
+        return Ok(response);
+    }
+
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Delete(Guid id)
