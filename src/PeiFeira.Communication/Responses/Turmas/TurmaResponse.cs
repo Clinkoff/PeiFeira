@@ -12,4 +12,14 @@ public class TurmaResponse : BaseResponse
     public string? Curso { get; set; }
     public int? Periodo { get; set; }
     public string? Turno { get; set; }
+
+    public SemestreSimplificadoResponse? Semestre { get; set; }
+}
+
+public class SemestreSimplificadoResponse
+{
+    public Guid Id { get; set; }
+    public string Nome { get; set; } = string.Empty;
+    public int Ano { get; set; }
+    public int Periodo { get; set; }
 }

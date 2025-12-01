@@ -64,6 +64,10 @@ public class ConviteEquipeAppService
         _logger.LogInformation("Listando convites pendentes do aluno: {PerfilAlunoId}", perfilAlunoId);
         return await _conviteEquipeManager.GetConvitesPendentesAsync(perfilAlunoId);
     }
+    public async Task<int> ContarConvitesPendentesAsync(Guid perfilAlunoId)
+    {
+        return await _conviteEquipeManager.ContarConvitesPendentesAsync(perfilAlunoId);
+    }
 
     public async Task<IEnumerable<ConviteEquipeResponse>> ListarConvitesPorEquipeAsync(Guid equipeId)
     {

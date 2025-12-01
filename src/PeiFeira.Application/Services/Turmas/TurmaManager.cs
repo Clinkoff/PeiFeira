@@ -168,7 +168,15 @@ public class TurmaManager : ITurmaManager
             Periodo = turma.Periodo,
             Turno = turma.Turno,
             CriadoEm = turma.CriadoEm,
-            AlteradoEm = turma.AlteradoEm
+            AlteradoEm = turma.AlteradoEm,
+
+            Semestre = turma.Semestre != null ? new SemestreSimplificadoResponse
+            {
+                Id = turma.Semestre.Id,
+                Nome = turma.Semestre.Nome, 
+                Ano = turma.Semestre.Ano,   
+                Periodo = turma.Semestre.Periodo 
+            } : null
         };
     }
 }

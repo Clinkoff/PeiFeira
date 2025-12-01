@@ -70,4 +70,10 @@ public class ConvitesEquipeController : ControllerBase
         var response = await _conviteEquipeAppService.ListarConvitesPorEquipeAsync(equipeId);
         return Ok(response);
     }
+    [HttpGet("count-pendentes/{perfilAlunoId}")]
+    public async Task<ActionResult<int>> GetCountPendentes(Guid perfilAlunoId)
+    {
+        var count = await _conviteEquipeAppService.ContarConvitesPendentesAsync(perfilAlunoId);
+        return Ok(count);
+    }
 }

@@ -17,27 +17,27 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         _dbSet = context.Set<T>();
     }
 
-    public async Task<T?> GetByIdAsync(Guid id)
+    public virtual async Task<T?> GetByIdAsync(Guid id)
     {
         return await _dbSet.FirstOrDefaultAsync(e => e.Id == id);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public virtual async Task<IEnumerable<T>> GetAllAsync()
     {
         return await _dbSet.ToListAsync();
     }
 
-    public async Task<IEnumerable<T>> GetActiveAsync()
+    public virtual async Task<IEnumerable<T>> GetActiveAsync()
     {
         return await _dbSet.Where(e => e.IsActive).ToListAsync();
     }
 
-    public async Task<bool> ExistsAsync(Guid id)
+    public virtual async Task<bool> ExistsAsync(Guid id)
     {
         return await _dbSet.AnyAsync(e => e.Id == id);
     }
 
-    public async Task<T> CreateAsync(T entity)
+    public virtual async Task<T> CreateAsync(T entity)
     {
         if (entity.Id == Guid.Empty)
             entity.Id = Guid.NewGuid();
@@ -47,13 +47,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         return entity;
     }
 
-    public async Task<T> UpdateAsync(T entity)
+    public virtual async Task<T> UpdateAsync(T entity)
     {
         _dbSet.Update(entity);
         return await Task.FromResult(entity);
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public virtual async Task<bool> DeleteAsync(Guid id)
     {
         var entity = await GetByIdAsync(id);
         if (entity == null) return false;
@@ -62,7 +62,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         return true;
     }
 
-    public async Task<bool> SoftDeleteAsync(Guid id)
+    public virtual async Task<bool> SoftDeleteAsync(Guid id)
     {
         var entity = await GetByIdAsync(id);
         if (entity == null) return false;
@@ -72,12 +72,12 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         return true;
     }
 
-    public async Task<int> CountAsync()
+    public virtual async Task<int> CountAsync()
     {
         return await _dbSet.CountAsync();
     }
 
-    public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
+    public virtual async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
     {
         return await _dbSet.CountAsync(predicate);
     }

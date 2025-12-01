@@ -12,4 +12,5 @@ public interface IConviteEquipeManager
     Task<ConviteEquipeResponse?> GetByIdAsync(Guid id);
     Task<IEnumerable<ConviteEquipeResponse>> GetConvitesPendentesAsync(Guid perfilAlunoId);
     Task<IEnumerable<ConviteEquipeResponse>> GetConvitesByEquipeAsync(Guid equipeId);
+    Task<int> ContarConvitesPendentesAsync(Guid perfilAlunoId);
 }

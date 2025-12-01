@@ -38,5 +38,31 @@ public class TurmaRepository : BaseRepository<Turma>, ITurma
             .Where(t => t.Curso != null && t.Curso.Contains(curso))
             .ToListAsync();
     }
+    public override async Task<IEnumerable<Turma>> GetAllAsync()
+    {
+        return await _dbSet
+            .Include(t => t.Semestre) 
+            .Include(t => t.AlunosTurma) 
+            .OrderByDescending(t => t.CriadoEm)
+            .ToListAsync();
+    }
 
+    public override async Task<IEnumerable<Turma>> GetActiveAsync()
+    {
+        return await _dbSet
+            .Include(t => t.Semestre)
+            .Where(t => t.IsActive)
+            .OrderByDescending(t => t.CriadoEm)
+            .ToListAsync();
+    }
+
+    public override async Task<Turma?> GetByIdAsync(Guid id)
+    {
+        return await _dbSet
+            .Include(t => t.Semestre)
+            .Include(t => t.AlunosTurma)
+                .ThenInclude(at => at.PerfilAluno)
+                    .ThenInclude(pa => pa.Usuario)
+            .FirstOrDefaultAsync(t => t.Id == id);
+    }
 }
